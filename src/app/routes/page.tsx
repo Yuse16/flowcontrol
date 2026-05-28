@@ -195,7 +195,7 @@ export default function RoutesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Pasos (Separados por ">")</label>
+                  <label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Pasos (Separados por &quot;&gt;&quot;)</label>
                   <input 
                     required
                     type="text" 
@@ -204,7 +204,7 @@ export default function RoutesPage() {
                     onChange={(e) => setStepsInput(e.target.value)}
                     className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-mono text-sm focus:outline-none focus:border-primary transition-all"
                   />
-                  <p className="text-[10px] text-gray-500 mt-2">Puedes usar ">", coma o barra para separar los pasos.</p>
+                  <p className="text-[10px] text-gray-500 mt-2">Puedes usar &quot;&gt;&quot;, coma o barra para separar los pasos.</p>
                 </div>
 
                 <div className="pt-4 flex gap-4">

@@ -10,6 +10,8 @@ export interface Activity {
   type: ActivityType;
   module: ActivityModule;
   priority: PriorityLevel;
+  category?: string;
+  time?: string;
   
   // Para recurrentes
   recurrence?: RecurrencePattern;
