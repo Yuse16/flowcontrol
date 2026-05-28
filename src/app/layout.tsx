@@ -11,6 +11,7 @@ import { ReminderModal } from "@/components/reminders/ReminderModal";
 
 import { DesignProvider } from "@/context/DesignContext";
 import { ThemeCustomizer } from "@/components/layout/ThemeCustomizer";
+import { NavigationProvider } from "@/context/NavigationContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,16 +56,18 @@ export default function RootLayout({
           <DesignProvider>
             <ReminderProvider>
               <AuthProvider>
-                <ReminderOverlay />
-                <ReminderModal />
-                <ThemeCustomizer />
-                <Sidebar />
-                <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
-                  <Topbar />
-                  <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6 lg:p-8 relative transition-colors duration-300">
-                    {children}
-                  </main>
-                </div>
+                <NavigationProvider>
+                  <ReminderOverlay />
+                  <ReminderModal />
+                  <ThemeCustomizer />
+                  <Sidebar />
+                  <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10 w-full">
+                    <Topbar />
+                    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 md:p-6 lg:p-8 relative transition-all duration-300">
+                      {children}
+                    </main>
+                  </div>
+                </NavigationProvider>
               </AuthProvider>
             </ReminderProvider>
           </DesignProvider>
