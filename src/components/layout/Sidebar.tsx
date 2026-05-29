@@ -179,7 +179,7 @@ export function Sidebar() {
         className={clsx(
           "h-full bg-[#0F0F17] border-r border-uzala-border flex-col relative z-50 transition-colors",
           "hidden md:flex",
-          isMobileMenuOpen ? "!flex fixed inset-y-0 left-0 shadow-2xl w-[280px]" : ""
+          isMobileMenuOpen ? "!flex fixed left-0 top-0 bottom-0 shadow-2xl w-[280px] safe-top" : ""
         )}
         style={{
           transform: `translateX(${(!isMobileMenuOpen && typeof window !== 'undefined' && window.innerWidth < 768) ? '-100%' : '0'})`

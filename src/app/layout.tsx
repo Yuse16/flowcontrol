@@ -10,7 +10,6 @@ import { ReminderProvider } from "@/context/ReminderContext";
 import { ReminderOverlay } from "@/components/reminders/ReminderOverlay";
 import { ReminderModal } from "@/components/reminders/ReminderModal";
 import { DesignProvider } from "@/context/DesignContext";
-import { ThemeCustomizer } from "@/components/layout/ThemeCustomizer";
 import { NavigationProvider } from "@/context/NavigationContext";
 import { SplashScreen } from "@/components/brand/SplashScreen";
 
@@ -35,7 +34,7 @@ export const metadata: Metadata = {
   applicationName: "UZALA",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "UZALA",
   },
   formatDetection: {
@@ -66,9 +65,8 @@ export default function RootLayout({
                   <SplashScreen />
                   <ReminderOverlay />
                   <ReminderModal />
-                  <ThemeCustomizer />
                   <Sidebar />
-                  <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10 w-full">
+                  <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10 w-full safe-top">
                     <Topbar />
                     <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 md:p-6 lg:p-8 pb-24 md:pb-8 relative transition-all duration-300">
                       {children}
