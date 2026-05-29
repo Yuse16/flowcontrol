@@ -78,7 +78,10 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col max-w-[1600px] mx-auto w-full pb-10 px-4">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col max-w-lg md:max-w-[1600px] mx-auto w-full pb-4">
+      <header className="mb-4 md:hidden">
+        <h1 className="text-2xl font-bold text-white">Calendario</h1>
+      </header>
       <CalendarHeader 
         currentDate={currentDate}
         viewType={viewType}

@@ -2,10 +2,10 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, UserRole } from '@/types/user';
 
-const STORAGE_KEY = 'flowcontrol_user_profile';
+const STORAGE_KEY = 'uzala_user_profile';
 
 const MOCK_USERS: User[] = [
-  { id: '1', name: 'Administrador', email: 'admin@flowcontrol.com', role: 'manager', department: 'Dirección' },
+  { id: '1', name: 'Jorge', email: 'jorge@uzala.app', role: 'manager', department: 'Dirección' },
 ];
 
 interface AuthContextType {

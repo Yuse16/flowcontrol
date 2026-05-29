@@ -70,7 +70,7 @@ export function ReminderOverlay() {
             </button>
 
             <p className="mt-6 text-[10px] uppercase font-bold tracking-widest text-gray-600">
-              FlowControl Advanced Protection System
+              UZALA — Sistema de recordatorios
             </p>
           </motion.div>
         </motion.div>

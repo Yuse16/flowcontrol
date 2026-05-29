@@ -37,7 +37,7 @@ interface DesignContextType {
 
 const defaultSettings: DesignSettings = {
   global: {
-    primaryColor: '#6366f1',
+    primaryColor: '#8B5CF6',
     borderRadius: '12px',
     fontSizeBase: '14px',
     fontFamily: "'Inter', sans-serif",

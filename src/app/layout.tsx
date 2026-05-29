@@ -3,12 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import { ReminderProvider } from "@/context/ReminderContext";
 import { ReminderOverlay } from "@/components/reminders/ReminderOverlay";
 import { ReminderModal } from "@/components/reminders/ReminderModal";
-
 import { DesignProvider } from "@/context/DesignContext";
 import { ThemeCustomizer } from "@/components/layout/ThemeCustomizer";
 import { NavigationProvider } from "@/context/NavigationContext";
@@ -16,7 +16,7 @@ import { NavigationProvider } from "@/context/NavigationContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
-  themeColor: '#6366f1',
+  themeColor: '#8B5CF6',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -24,13 +24,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "FlowControl | Productividad Premium",
-  description: "Plataforma inteligente de gestión de actividades y productividad empresarial.",
-  applicationName: "FlowControl",
+  title: "UZALA | Gestión Inteligente",
+  description: "Plataforma móvil de gestión de actividades, pendientes y productividad.",
+  applicationName: "UZALA",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "FlowControl",
+    title: "UZALA",
   },
   formatDetection: {
     telephone: false,
@@ -63,9 +63,10 @@ export default function RootLayout({
                   <Sidebar />
                   <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10 w-full">
                     <Topbar />
-                    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 md:p-6 lg:p-8 relative transition-all duration-300">
+                    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 md:p-6 lg:p-8 pb-24 md:pb-8 relative transition-all duration-300">
                       {children}
                     </main>
+                    <BottomNav />
                   </div>
                 </NavigationProvider>
               </AuthProvider>

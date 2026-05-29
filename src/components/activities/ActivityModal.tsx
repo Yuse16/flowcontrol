@@ -92,7 +92,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                   type="text" 
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-3 text-sm text-[#111827] dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6366f1]/10 focus:border-[#6366f1] transition-all"
+                  className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-3 text-sm text-[#111827] dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/10 focus:border-[#8B5CF6] transition-all"
                   placeholder="Ej. Revisar inventario de surtido"
                   autoFocus
                 />
@@ -107,7 +107,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                   <select 
                     value={type}
                     onChange={e => setType(e.target.value as ActivityType)}
-                    className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#6366f1] transition-all"
+                    className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#8B5CF6] transition-all"
                   >
                     <option value="recurrent">Recurrente (Rutina)</option>
                     <option value="variable">Variable (Una vez)</option>
@@ -120,7 +120,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                   <select 
                     value={module}
                     onChange={e => setModule(e.target.value as ActivityModule)}
-                    className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#6366f1] transition-all"
+                    className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#8B5CF6] transition-all"
                   >
                     <option value="general">General</option>
                     <option value="proveedores">Proveedores</option>
@@ -144,7 +144,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                       onClick={() => setPriority(p)}
                       className={`py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg border transition-all ${
                         priority === p 
-                        ? 'bg-[#6366f1] border-[#6366f1] text-white' 
+                        ? 'bg-[#8B5CF6] border-[#8B5CF6] text-white' 
                         : 'bg-white dark:bg-[#171717] border-[#f3f4f6] dark:border-[#262626] text-gray-400 hover:border-gray-300'
                       }`}
                     >
@@ -172,7 +172,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                           onClick={() => setRecurrence(r.id as RecurrencePattern)}
                           className={`py-2 px-3 text-[11px] font-semibold rounded-xl border text-left transition-all ${
                             recurrence === r.id 
-                            ? 'bg-[#6366f1]/5 border-[#6366f1] text-[#6366f1]' 
+                            ? 'bg-[#8B5CF6]/5 border-[#8B5CF6] text-[#8B5CF6]' 
                             : 'bg-white dark:bg-[#171717] border-[#f3f4f6] dark:border-[#262626] text-gray-500'
                           }`}
                         >
@@ -193,7 +193,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                             onClick={() => toggleDay(i)}
                             className={`w-9 h-9 rounded-full text-xs font-bold transition-all border ${
                               customDays.includes(i)
-                              ? 'bg-[#6366f1] border-[#6366f1] text-white'
+                              ? 'bg-[#8B5CF6] border-[#8B5CF6] text-white'
                               : 'bg-white dark:bg-[#171717] border-[#f3f4f6] dark:border-[#262626] text-gray-400'
                             }`}
                           >
@@ -228,7 +228,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                   <button 
                     type="submit" 
                     disabled={!title.trim()} 
-                    className="bg-[#6366f1] hover:bg-[#4f46e5] text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-[#6366f1]/25 disabled:opacity-50 disabled:shadow-none"
+                    className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-[#8B5CF6]/25 disabled:opacity-50 disabled:shadow-none"
                   >
                     {initialData ? 'Guardar Cambios' : 'Crear Actividad'}
                   </button>

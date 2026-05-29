@@ -126,7 +126,7 @@ export function ThemeCustomizer() {
                 /* Menú Principal */
                 <div className="bg-white">
                    <div className="p-5 border-b border-[#f0f0f1]">
-                     <h2 className="text-sm font-bold text-[#1d2327]">Ajustes de FlowControl</h2>
+                     <h2 className="text-sm font-bold text-[#1d2327]">Ajustes de UZALA</h2>
                      <p className="text-[10px] text-[#646970]">Estás editando el diseño de la aplicación.</p>
                    </div>
                    

@@ -1,32 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e1b4b"/>
-      <stop offset="50%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#020617"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#818cf8"/>
-      <stop offset="100%" stop-color="#6366f1"/>
-    </linearGradient>
-    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a5b4fc" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="50%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
     </linearGradient>
   </defs>
-  
-  <!-- Background -->
-  <rect width="512" height="512" rx="92" fill="url(#bg)"/>
-  
-  <!-- Subtle glow circle -->
-  <circle cx="179.2" cy="153.6" r="179.2" fill="url(#glow)" opacity="0.5"/>
-  
-  <!-- Border -->
-  <rect x="2" y="2" width="508" height="508" rx="92" fill="none" stroke="url(#accent)" stroke-width="2.56" opacity="0.3"/>
-  
-  <!-- FC Letters -->
-  <text x="256" y="317.44" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="194.56" fill="url(#accent)" text-anchor="middle" letter-spacing="-10.24">FC</text>
-  
-  <!-- Small tagline -->
-  <text x="256" y="378.88" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="33.28" fill="#94a3b8" text-anchor="middle" letter-spacing="7.68">FLOWCONTROL</text>
+  <rect width="512" height="512" rx="108" fill="#0F0F17"/>
+  <path d="M128 160 C128 160 128 352 256 352 C384 352 384 160 384 160" stroke="url(#g)" stroke-width="52" stroke-linecap="round" fill="none"/>
+  <path d="M320 288 L384 352 L448 256" stroke="url(#g)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>
