@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: var(--bg-custom, #050508);
+    --background: var(--bg-custom, #05000A);
     --foreground: #f1f5f9;
     --card-bg: var(--card-bg-custom, #1A1A28);
     --border-color: #2A2A3C;

@@ -21,7 +21,7 @@ const orbitron = Orbitron({
 });
 
 export const viewport: Viewport = {
-  themeColor: '#050508',
+  themeColor: '#05000A',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,

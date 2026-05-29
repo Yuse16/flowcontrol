@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'App móvil de gestión de actividades, calendario y pendientes.',
     start_url: '/dashboard',
     display: 'standalone',
-    background_color: '#050508',
-    theme_color: '#8A2BE2',
+    background_color: '#05000A',
+    theme_color: '#9333EA',
     orientation: 'portrait-primary',
     categories: ['productivity', 'business', 'utilities'],
     icons: [

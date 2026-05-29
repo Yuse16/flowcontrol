@@ -1,4 +1,4 @@
-import { UZALA_COLORS, UZALA_GRADIENT_STOPS, uzalaMarkPaths } from './uzalaBrand';
+import { UZALA_COLORS, UZALA_ICON_GRADIENT, UZALA_MARK } from './uzalaBrand';
 
 interface UzalaMarkProps {
   size?: number;
@@ -7,8 +7,8 @@ interface UzalaMarkProps {
 }
 
 export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkProps) {
-  const { squircle, uShape, checkTip, strokeWidth } = uzalaMarkPaths(100);
-  const gradId = `uzalaGrad-${size}`;
+  const uid = `mark-${size}`;
+  const { squircle, uBody, uTick, uCap, glow, strokeWidth } = UZALA_MARK;
 
   return (
     <svg
@@ -21,90 +21,85 @@ export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkPr
       aria-hidden
     >
       <defs>
-        <linearGradient id={gradId} x1="10%" y1="20%" x2="90%" y2="80%">
-          {UZALA_GRADIENT_STOPS.map((stop) => (
-            <stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
+        <linearGradient id={`${uid}-grad`} x1="15%" y1="10%" x2="85%" y2="90%">
+          {UZALA_ICON_GRADIENT.map((s) => (
+            <stop key={s.offset} offset={s.offset} stopColor={s.color} />
           ))}
         </linearGradient>
+        <linearGradient id={`${uid}-border`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#9333EA" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.25" />
+        </linearGradient>
+        <radialGradient id={`${uid}-ambient`} cx="50%" cy="55%" r="50%">
+          <stop offset="0%" stopColor="#9333EA" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#9333EA" stopOpacity="0" />
+        </radialGradient>
         {showGlow && (
-          <>
-            <linearGradient id={`${gradId}-border`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8A2BE2" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#00D4FF" stopOpacity="0.3" />
-            </linearGradient>
-            <filter id={`${gradId}-glow`} x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </>
+          <filter id={`${uid}-blur`} x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         )}
       </defs>
 
-      {/* Squircle background */}
+      {/* Squircle container */}
       <rect
-        x="4"
-        y="4"
-        width="92"
-        height="92"
+        x={squircle.x}
+        y={squircle.y}
+        width={squircle.w}
+        height={squircle.h}
         rx={squircle.rx}
         fill={squircle.fill}
-        stroke={showGlow ? `url(#${gradId}-border)` : '#2a2040'}
-        strokeWidth="1.5"
+        stroke={`url(#${uid}-border)`}
+        strokeWidth="1.2"
       />
 
-      {/* U body */}
+      {/* Purple ambient glow inside icon */}
+      {showGlow && (
+        <ellipse
+          cx={glow.cx}
+          cy={glow.cy}
+          rx={glow.rx}
+          ry={glow.ry}
+          fill={`url(#${uid}-ambient)`}
+        />
+      )}
+
+      {/* Detached vertical cap (right arm top piece) */}
+      <rect
+        x={uCap.x}
+        y={uCap.y}
+        width={uCap.w}
+        height={uCap.h}
+        rx={uCap.rx}
+        fill={`url(#${uid}-grad)`}
+        filter={showGlow ? `url(#${uid}-blur)` : undefined}
+      />
+
+      {/* Main U body */}
       <path
-        d={uShape}
-        stroke={`url(#${gradId})`}
+        d={uBody}
+        stroke={`url(#${uid}-grad)`}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        filter={showGlow ? `url(#${gradId}-glow)` : undefined}
+        filter={showGlow ? `url(#${uid}-blur)` : undefined}
       />
 
-      {/* Broken right leg / check tip */}
+      {/* Diagonal tick */}
       <path
-        d={checkTip}
-        stroke={`url(#${gradId})`}
+        d={uTick}
+        stroke={`url(#${uid}-grad)`}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        filter={showGlow ? `url(#${gradId}-glow)` : undefined}
+        filter={showGlow ? `url(#${uid}-blur)` : undefined}
       />
     </svg>
   );
-}
-
-/** Static SVG string for public icon files — keeps PWA icons identical to in-app mark */
-export function renderUzalaMarkSvg(size: number, cornerRadius: number): string {
-  const gradId = 'g';
-  const stops = UZALA_GRADIENT_STOPS.map(
-    (s) => `<stop offset="${s.offset}" stop-color="${s.color}"/>`
-  ).join('');
-
-  const scale = size / 100;
-  const sw = 11 * scale;
-  const rx = cornerRadius;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <defs>
-    <linearGradient id="${gradId}" x1="10%" y1="20%" x2="90%" y2="80%">${stops}</linearGradient>
-    <linearGradient id="border" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#00D4FF" stop-opacity="0.3"/>
-    </linearGradient>
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="${2 * scale}" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
-  <rect x="${4 * scale}" y="${4 * scale}" width="${92 * scale}" height="${92 * scale}" rx="${rx}" fill="${UZALA_COLORS.bgCard}" stroke="url(#border)" stroke-width="${1.5 * scale}"/>
-  <path d="M ${28 * scale} ${32 * scale} V ${54 * scale} Q ${28 * scale} ${72 * scale} ${50 * scale} ${72 * scale} Q ${72 * scale} ${72 * scale} ${72 * scale} ${54 * scale} V ${46 * scale}" stroke="url(#${gradId})" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#glow)"/>
-  <path d="M ${72 * scale} ${46 * scale} L ${72 * scale} ${34 * scale} L ${84 * scale} ${22 * scale}" stroke="url(#${gradId})" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#glow)"/>
-</svg>`;
 }

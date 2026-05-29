@@ -1,89 +1,115 @@
 import clsx from 'clsx';
+import {
+  UZALA_COLORS,
+  UZALA_TEXT_GRADIENT,
+  UZALA_WORDMARK,
+  WORDMARK_WIDTHS,
+} from './uzalaBrand';
 
 interface UzalaWordmarkProps {
   size?: 'sm' | 'md' | 'lg' | 'hero';
   className?: string;
 }
 
-const SIZE_CLASSES = {
-  sm: { text: 'text-[15px] tracking-[0.28em]', dot: 'w-1 h-1', aH: 'h-[14px] w-[13px]' },
-  md: { text: 'text-[19px] tracking-[0.3em]', dot: 'w-1.5 h-1.5', aH: 'h-[17px] w-[16px]' },
-  lg: { text: 'text-[26px] tracking-[0.32em]', dot: 'w-2 h-2', aH: 'h-[23px] w-[22px]' },
-  hero: { text: 'text-[44px] tracking-[0.34em]', dot: 'w-3 h-3', aH: 'h-[38px] w-[36px]' },
-};
-
-function StylizedA({ size, variant = 'featured' }: { size: keyof typeof SIZE_CLASSES; variant?: 'featured' | 'plain' }) {
-  const s = SIZE_CLASSES[size];
-
-  if (variant === 'plain') {
-    return (
-      <span className={clsx('inline-flex items-end mx-[0.08em]', s.aH)} aria-hidden>
-        <svg viewBox="0 0 24 28" className="h-full w-auto" fill="none">
-          <path d="M4 26 L12 2 L20 26" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M7 18 H17" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.3" />
-        </svg>
-      </span>
-    );
-  }
-
-  return (
-    <span className={clsx('inline-flex flex-col items-center mx-[0.08em] relative', s.aH)} aria-hidden>
-      <svg viewBox="0 0 24 28" className="h-full w-auto" fill="none">
-        <defs>
-          <linearGradient id="aPeak" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="35%" stopColor="#8A2BE2" />
-            <stop offset="100%" stopColor="#00D4FF" />
-          </linearGradient>
-        </defs>
-        <path d="M12 2 L20 26" stroke="url(#aPeak)" strokeWidth="2.8" strokeLinecap="round" />
-        <path d="M12 2 L4 26" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
-        <path d="M4 26 L20 26" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
-      </svg>
-      <span className={clsx('absolute top-[52%] left-1/2 -translate-x-1/2 rounded-full bg-[#00D4FF]', s.dot)} />
-    </span>
-  );
-}
-
 export function UzalaWordmark({ size = 'md', className }: UzalaWordmarkProps) {
-  const s = SIZE_CLASSES[size];
+  const width = WORDMARK_WIDTHS[size];
+  const height = (width * UZALA_WORDMARK.viewH) / UZALA_WORDMARK.viewW;
+  const uid = `wm-${size}`;
+  const sw = UZALA_WORDMARK.stroke;
+
+  // Letter positions tuned to match reference image proportions
+  const a1cx = 128;
+  const a1top = 7;
+  const a1base = 45;
+  const a1w = 15;
 
   return (
-    <div
-      className={clsx(
-        'font-orbitron font-bold text-white inline-flex items-end leading-none select-none',
-        s.text,
-        className
-      )}
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${UZALA_WORDMARK.viewW} ${UZALA_WORDMARK.viewH}`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={clsx('flex-shrink-0', className)}
       aria-label="UZALA"
       role="img"
     >
-      <span>U</span>
-      <span>Z</span>
-      <StylizedA size={size} variant="featured" />
-      <span>L</span>
-      <StylizedA size={size} variant="plain" />
-    </div>
+      <defs>
+        <linearGradient id={`${uid}-aGrad`} x1="0%" y1="100%" x2="60%" y2="0%">
+          {UZALA_TEXT_GRADIENT.map((s) => (
+            <stop key={s.offset} offset={s.offset} stopColor={s.color} />
+          ))}
+        </linearGradient>
+      </defs>
+
+      {/* U */}
+      <path
+        d="M 2 45 V 17 Q 2 5 24 5 Q 46 5 46 17 V 45"
+        stroke={UZALA_COLORS.white}
+        strokeWidth={sw}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Z */}
+      <path
+        d="M 58 7 H 94 L 58 45 H 94"
+        stroke={UZALA_COLORS.white}
+        strokeWidth={sw}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* First A — gradient left half, white right leg, cyan dot, no crossbar */}
+      <path
+        d={`M ${a1cx - a1w} ${a1base} L ${a1cx} ${a1top} L ${a1cx} ${a1base} Z`}
+        fill={`url(#${uid}-aGrad)`}
+      />
+      <path
+        d={`M ${a1cx} ${a1top} L ${a1cx + a1w} ${a1base}`}
+        stroke={UZALA_COLORS.white}
+        strokeWidth={sw}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx={a1cx} cy={34} r={3.2} fill={UZALA_COLORS.cyan} />
+
+      {/* L */}
+      <path
+        d="M 162 45 V 7 H 188"
+        stroke={UZALA_COLORS.white}
+        strokeWidth={sw}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Final A — open white V, no crossbar, no dot */}
+      <path
+        d="M 204 45 L 218 7 L 232 45"
+        stroke={UZALA_COLORS.white}
+        strokeWidth={sw}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
 export function UzalaTagline({ variant = 'full' }: { variant?: 'full' | 'short' }) {
   if (variant === 'short') {
     return (
-      <p className="text-[11px] text-[#9D80FE]/90 font-light tracking-wide text-center font-orbitron">
+      <p className="text-[11px] text-white/90 font-light tracking-wide text-center">
         ¿Tienes que recordar algo?
       </p>
     );
   }
 
   return (
-    <div className="text-center space-y-2 font-orbitron">
-      <p className="text-sm text-[#9D80FE]/90 font-light tracking-wide">
+    <div className="text-center space-y-2.5">
+      <p className="text-[15px] text-white/90 font-light tracking-wide">
         ¿Tienes que recordar algo?
       </p>
-      <p
-        className="text-sm font-semibold tracking-[0.35em] uppercase bg-gradient-to-r from-[#9D80FE] to-[#00D4FF] bg-clip-text text-transparent"
-      >
+      <p className="text-[15px] font-medium tracking-[0.28em] uppercase text-[#9D80FE]">
         UZALA UZALA.
       </p>
     </div>
