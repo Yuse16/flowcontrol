@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: var(--bg-custom, #0F0F17);
+    --background: var(--bg-custom, #050508);
     --foreground: #f1f5f9;
     --card-bg: var(--card-bg-custom, #1A1A28);
     --border-color: #2A2A3C;
@@ -54,17 +54,21 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+.font-orbitron {
+  font-family: var(--font-orbitron), 'Orbitron', sans-serif;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
   .uzala-gradient {
-    background: linear-gradient(135deg, #7C3AED 0%, #3B82F6 50%, #06B6D4 100%);
+    background: linear-gradient(135deg, #8A2BE2 0%, #6366F1 50%, #00D4FF 100%);
   }
 
   .uzala-gradient-text {
-    background: linear-gradient(135deg, #A78BFA 0%, #60A5FA 50%, #22D3EE 100%);
+    background: linear-gradient(135deg, #9D80FE 0%, #60A5FA 50%, #00D4FF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

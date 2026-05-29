@@ -4,7 +4,7 @@ import { Bell, Menu } from 'lucide-react';
 import { useReminders } from '@/hooks/useReminders';
 import { ReminderDropdown } from '@/components/reminders/ReminderDropdown';
 import { useNavigation } from '@/context/NavigationContext';
-import { UzalaLogo } from '@/components/layout/UzalaLogo';
+import { UzalaWordmark } from '@/components/brand/UzalaWordmark';
 
 export function Topbar() {
   const { setIsMobileMenuOpen } = useNavigation();
@@ -14,7 +14,7 @@ export function Topbar() {
   const pendingCount = reminders.filter(r => r.status === 'pending').length;
 
   return (
-    <header className="h-14 bg-[#0F0F17] border-b border-[#2A2A3C] flex items-center justify-between px-4 md:px-6 z-40 sticky top-0">
+    <header className="h-14 bg-[#050508] border-b border-[#2A2A3C] flex items-center justify-between px-4 md:px-6 z-40 sticky top-0">
       {/* Mobile header */}
       <div className="flex items-center justify-between w-full md:hidden">
         <button
@@ -24,7 +24,7 @@ export function Topbar() {
           <Menu size={22} />
         </button>
 
-        <UzalaLogo size="sm" />
+        <UzalaWordmark size="sm" />
 
         <div className="relative">
           <button
@@ -33,7 +33,7 @@ export function Topbar() {
           >
             <Bell size={22} />
             {pendingCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-uzala-purple rounded-full border border-[#0F0F17]" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#8A2BE2] rounded-full border border-[#050508]" />
             )}
           </button>
           <ReminderDropdown
@@ -45,7 +45,7 @@ export function Topbar() {
 
       {/* Desktop header */}
       <div className="hidden md:flex items-center justify-between w-full">
-        <UzalaLogo size="md" />
+        <UzalaWordmark size="md" />
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -53,7 +53,7 @@ export function Topbar() {
           >
             <Bell size={20} />
             {pendingCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-uzala-purple rounded-full border border-[#0F0F17]" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#8A2BE2] rounded-full border border-[#050508]" />
             )}
           </button>
           <ReminderDropdown

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Orbitron } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
@@ -12,11 +12,17 @@ import { ReminderModal } from "@/components/reminders/ReminderModal";
 import { DesignProvider } from "@/context/DesignContext";
 import { ThemeCustomizer } from "@/components/layout/ThemeCustomizer";
 import { NavigationProvider } from "@/context/NavigationContext";
+import { SplashScreen } from "@/components/brand/SplashScreen";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  variable: "--font-orbitron",
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 export const viewport: Viewport = {
-  themeColor: '#8B5CF6',
+  themeColor: '#050508',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -25,7 +31,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "UZALA | Gestión Inteligente",
-  description: "Plataforma móvil de gestión de actividades, pendientes y productividad.",
+  description: "¿Tienes que recordar algo? UZALA — app de actividades, pendientes y productividad.",
   applicationName: "UZALA",
   appleWebApp: {
     capable: true,
@@ -51,12 +57,13 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
       </head>
-      <body className={`${inter.className} bg-background text-foreground flex h-screen overflow-hidden transition-colors duration-300`}>
+      <body className={`${inter.variable} ${orbitron.variable} ${inter.className} bg-background text-foreground flex h-screen overflow-hidden transition-colors duration-300`}>
         <ThemeProvider>
           <DesignProvider>
             <ReminderProvider>
               <AuthProvider>
                 <NavigationProvider>
+                  <SplashScreen />
                   <ReminderOverlay />
                   <ReminderModal />
                   <ThemeCustomizer />

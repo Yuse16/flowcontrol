@@ -22,7 +22,7 @@ import clsx from 'clsx';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeProvider';
 import { useNavigation } from '@/context/NavigationContext';
-import { UzalaLogo } from '@/components/layout/UzalaLogo';
+import { UzalaLogo } from '@/components/brand/UzalaLogo';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -43,8 +43,8 @@ export function Sidebar() {
   const sidebarContent = (
     <>
       <div className="p-5 flex items-center justify-between">
-        <Link href="/dashboard" onClick={closeMobileMenu}>
-          <UzalaLogo size="sm" />
+        <Link href="/dashboard" onClick={closeMobileMenu} className="flex items-center gap-2">
+          <UzalaLogo size="sm" showText />
         </Link>
         <button
           onClick={closeMobileMenu}
