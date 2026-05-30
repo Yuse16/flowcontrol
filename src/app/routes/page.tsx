@@ -49,7 +49,7 @@ export default function RoutesPage() {
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6 pb-10 min-h-screen bg-[#fcfcfc] dark:bg-[#0a0a0a] p-8">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6 pb-10">
       {/* Header - Minimalist */}
       <div className="flex justify-between items-end mb-8">
         <div className="space-y-1">

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeProvider';
 import { User, Shield, Palette, Zap, Save, CheckCircle } from 'lucide-react';
@@ -11,9 +11,15 @@ export default function SettingsPage() {
   const [name, setName] = useState(currentUser.name);
   const [showSaved, setShowSaved] = useState(false);
 
+  useEffect(() => {
+    setName(currentUser.name);
+  }, [currentUser.name]);
+
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
-    updateProfile(name);
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    updateProfile(trimmed);
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 3000);
   };

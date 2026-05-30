@@ -8,6 +8,14 @@ import { ActivityModal } from '@/components/activities/ActivityModal';
 import { Activity } from '@/types/activity';
 import { getCategoryColor } from '@/utils/uzalaTheme';
 
+const MODULE_LABELS: Record<string, string> = {
+  proveedores: 'Proveedores',
+  surtir: 'Surtir',
+  urgentes: 'Urgentes',
+  vencidos: 'Vencidos',
+  general: 'General',
+};
+
 const TABS = [
   { id: 'all', label: 'Todas' },
   { id: 'today', label: 'Hoy' },
@@ -103,7 +111,7 @@ export default function ActivitiesPage() {
               const isDone = activity.type === 'variable'
                 ? activity.isCompleted
                 : activity.completionHistory?.[todayStr];
-              const catColor = getCategoryColor(activity.category);
+              const catColor = getCategoryColor(activity.module);
 
               return (
                 <motion.div
@@ -138,7 +146,7 @@ export default function ActivitiesPage() {
                       color: catColor,
                     }}
                   >
-                    {activity.category || 'General'}
+                    {MODULE_LABELS[activity.module] || 'General'}
                   </span>
                 </motion.div>
               );
@@ -150,6 +158,14 @@ export default function ActivitiesPage() {
           )}
         </AnimatePresence>
       </div>
+
+      <button
+        onClick={() => { setEditingActivity(null); setIsModalOpen(true); }}
+        className="flex md:hidden fixed bottom-28 right-4 z-30 w-12 h-12 uzala-gradient rounded-full items-center justify-center shadow-uzala-lg"
+        aria-label="Nueva actividad"
+      >
+        <Plus size={22} className="text-white" />
+      </button>
 
       <button
         onClick={() => { setEditingActivity(null); setIsModalOpen(true); }}

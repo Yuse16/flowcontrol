@@ -56,7 +56,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
       </head>
-      <body className={`${inter.variable} ${orbitron.variable} ${inter.className} bg-background text-foreground flex h-screen overflow-hidden transition-colors duration-300`}>
+      <body className={`${inter.variable} ${orbitron.variable} ${inter.className} bg-background text-foreground flex min-h-[100dvh] h-[100dvh] overflow-hidden transition-colors duration-300`}>
         <ThemeProvider>
           <DesignProvider>
             <ReminderProvider>
@@ -68,7 +68,7 @@ export default function RootLayout({
                   <Sidebar />
                   <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10 w-full safe-top">
                     <Topbar />
-                    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 md:p-6 lg:p-8 pb-24 md:pb-8 relative transition-all duration-300">
+                    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 md:p-6 lg:p-8 pb-24 md:pb-8 main-content-mobile relative transition-all duration-300">
                       {children}
                     </main>
                     <BottomNav />

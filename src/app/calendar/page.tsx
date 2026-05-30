@@ -9,6 +9,7 @@ import { useCalendarTasks } from '@/hooks/useCalendarTasks';
 import { useAdvancedActivities } from '@/hooks/useAdvancedActivities';
 import { CalendarViewType, CalendarTask } from '@/types/calendar';
 import { PriorityLevel } from '@/types/common';
+import { formatDateString } from '@/utils/date';
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -21,6 +22,7 @@ export default function CalendarPage() {
   const { getActivitiesForDate, toggleCompletion: toggleAdvancedCompletion } = useAdvancedActivities();
 
   const advancedActivitiesForDay = getActivitiesForDate(currentDate);
+  const calendarTasksForDay = tasks.filter(t => t.date === formatDateString(currentDate));
 
   const handlePrev = () => {
     const newDate = new Date(currentDate);
@@ -54,12 +56,12 @@ export default function CalendarPage() {
 
   const handleOpenNewTaskModal = () => {
     setEditingTask(null);
-    setSelectedDate(viewType === 'day' ? currentDate : new Date());
+    setSelectedDate(currentDate);
     setIsModalOpen(true);
   };
 
   const handleSaveTask = (title: string, priority: PriorityLevel, description: string) => {
-    const dateStr = selectedDate.toISOString().split('T')[0];
+    const dateStr = formatDateString(selectedDate);
     if (editingTask) {
       updateTask(editingTask.id, { title, priority, description });
     } else {
@@ -115,7 +117,10 @@ export default function CalendarPage() {
         <DayView 
           currentDate={currentDate} 
           activities={advancedActivitiesForDay}
+          calendarTasks={calendarTasksForDay}
           onToggleComplete={toggleAdvancedCompletion}
+          onToggleCalendarTask={toggleTaskStatus}
+          onCalendarTaskClick={handleTaskClick}
         />
       )}
 
@@ -127,7 +132,12 @@ export default function CalendarPage() {
         onSave={handleSaveTask}
         onDelete={handleDeleteTask}
         onMove={(newDate) => editingTask && moveTask(editingTask.id, newDate)}
-        onToggleStatus={() => editingTask && toggleTaskStatus(editingTask.id)}
+        onToggleStatus={() => {
+          if (editingTask) {
+            toggleTaskStatus(editingTask.id);
+            setEditingTask(prev => prev ? { ...prev, completed: !prev.completed } : null);
+          }
+        }}
       />
     </div>
   );

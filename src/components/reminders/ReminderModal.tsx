@@ -13,13 +13,14 @@ export function ReminderModal() {
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!message.trim()) return;
     
     let delayMs = 0;
     if (unit === 'minutes') delayMs = amount * 60 * 1000;
     else if (unit === 'hours') delayMs = amount * 60 * 60 * 1000;
     else if (unit === 'days') delayMs = amount * 24 * 60 * 60 * 1000;
 
-    addReminder(message, delayMs);
+    addReminder(message.trim(), delayMs);
     setModalOpen(false);
     setMessage('');
     setAmount(5);

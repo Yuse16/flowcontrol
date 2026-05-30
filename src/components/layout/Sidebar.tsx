@@ -36,8 +36,8 @@ export function Sidebar() {
     { icon: CheckSquare, label: 'Pendientes', href: '/todos' },
     { icon: Activity, label: 'Actividades', href: '/activities' },
     { icon: BookOpen, label: 'Rutas', href: '/routes' },
-    { icon: ShieldAlert, label: 'Panel Gerencial', href: '/manager' },
-    { icon: BarChart3, label: 'Reportes', href: '/reports' },
+    ...(isManager ? [{ icon: ShieldAlert, label: 'Panel Gerencial', href: '/manager' }] : []),
+    { icon: BarChart3, label: 'Estadísticas', href: '/statistics' },
   ];
 
   const sidebarContent = (
@@ -172,18 +172,14 @@ export function Sidebar() {
 
       <motion.aside
         initial={false}
-        animate={{
-          width: isDesktopCollapsed ? 76 : 260,
-          x: 0
-        }}
+        animate={isMobileMenuOpen ? { x: 0 } : undefined}
         className={clsx(
           "h-full bg-[#0F0F17] border-r border-uzala-border flex-col relative z-50 transition-colors",
-          "hidden md:flex",
-          isMobileMenuOpen ? "!flex fixed left-0 top-0 bottom-0 shadow-2xl w-[280px] safe-top" : ""
+          isMobileMenuOpen
+            ? "flex fixed left-0 top-0 bottom-0 shadow-2xl w-[280px] safe-top md:hidden"
+            : "hidden md:flex",
+          !isMobileMenuOpen && (isDesktopCollapsed ? "md:w-[76px]" : "md:w-[260px]")
         )}
-        style={{
-          transform: `translateX(${(!isMobileMenuOpen && typeof window !== 'undefined' && window.innerWidth < 768) ? '-100%' : '0'})`
-        }}
       >
         {sidebarContent}
       </motion.aside>

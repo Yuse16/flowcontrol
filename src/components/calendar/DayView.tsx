@@ -1,15 +1,19 @@
 import { Activity } from '@/types/activity';
+import { CalendarTask } from '@/types/calendar';
 import { formatDateString } from '@/utils/date';
-import { CheckCircle2, Circle, AlertCircle, RefreshCw, Layers } from 'lucide-react';
+import { CheckCircle2, Circle, AlertCircle, RefreshCw, Layers, CalendarDays } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface DayViewProps {
   currentDate: Date;
   activities: Activity[];
+  calendarTasks?: CalendarTask[];
   onToggleComplete: (id: string, dateStr: string) => void;
+  onToggleCalendarTask?: (id: string) => void;
+  onCalendarTaskClick?: (task: CalendarTask) => void;
 }
 
-export function DayView({ currentDate, activities, onToggleComplete }: DayViewProps) {
+export function DayView({ currentDate, activities, calendarTasks = [], onToggleComplete, onToggleCalendarTask, onCalendarTaskClick }: DayViewProps) {
   const dateStr = formatDateString(currentDate);
   const today = new Date();
   today.setHours(0,0,0,0);
@@ -22,8 +26,9 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
     return !!(act.completionHistory && act.completionHistory[dateStr]);
   };
 
-  const completedCount = activities.filter(isCompleted).length;
-  const progress = activities.length > 0 ? Math.round((completedCount / activities.length) * 100) : 0;
+  const completedCount = activities.filter(isCompleted).length + calendarTasks.filter(t => t.completed).length;
+  const totalCount = activities.length + calendarTasks.length;
+  const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   const recurrentActs = activities.filter(a => a.type === 'recurrent');
   const variableActs = activities.filter(a => a.type === 'variable');
@@ -100,7 +105,7 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Resumen del Día</p>
             <h2 className="text-3xl font-black text-[#111827] dark:text-white tracking-tighter">Actividades</h2>
-            <p className="text-sm text-gray-500 font-medium mt-1">{completedCount} de {activities.length} completadas</p>
+            <p className="text-sm text-gray-500 font-medium mt-1">{completedCount} de {totalCount} completadas</p>
           </div>
           <div className="text-5xl font-black text-primary tracking-tighter">
             {progress}%
@@ -118,7 +123,7 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
 
       {/* Lists */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-8">
-        {activities.length === 0 ? (
+        {totalCount === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-gray-500 py-20">
             <div className="w-20 h-20 mb-6 rounded-[24px] bg-gray-50 dark:bg-white/5 flex items-center justify-center shadow-inner">
               <Layers size={32} className="opacity-20" />
@@ -128,6 +133,41 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
           </div>
         ) : (
           <div className="space-y-12 max-w-4xl mx-auto">
+
+            {calendarTasks.length > 0 && (
+              <section>
+                <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.4)]" /> Tareas del calendario
+                </h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {calendarTasks.map(task => (
+                    <motion.div
+                      key={task.id}
+                      layout
+                      className={`group flex items-start gap-4 p-4 rounded-xl border transition-all cursor-pointer ${
+                        task.completed ? 'bg-background border-border opacity-60' : 'bg-card border-border hover:border-primary/50'
+                      }`}
+                      onClick={() => onCalendarTaskClick?.(task)}
+                    >
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onToggleCalendarTask?.(task.id); }}
+                        className={`mt-0.5 flex-shrink-0 ${task.completed ? 'text-primary' : 'text-gray-400 hover:text-primary'}`}
+                      >
+                        {task.completed ? <CheckCircle2 size={24} /> : <Circle size={24} />}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`text-base font-medium truncate ${task.completed ? 'line-through text-gray-500' : 'text-foreground'}`}>
+                          {task.title}
+                        </h4>
+                        <span className="inline-flex items-center gap-1 text-[10px] text-gray-500 mt-2">
+                          <CalendarDays size={10} /> Calendario
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            )}
             
             {/* Variables */}
             {variableActs.length > 0 && (

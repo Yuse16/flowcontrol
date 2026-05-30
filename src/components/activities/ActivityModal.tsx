@@ -19,8 +19,11 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
   const [priority, setPriority] = useState<PriorityLevel>('medium');
   const [recurrence, setRecurrence] = useState<RecurrencePattern>('daily');
   const [customDays, setCustomDays] = useState<number[]>([]);
+  const [customDaysError, setCustomDaysError] = useState('');
 
   useEffect(() => {
+    if (!isOpen) return;
+    setCustomDaysError('');
     if (initialData) {
       setTitle(initialData.title);
       setType(initialData.type);
@@ -43,9 +46,13 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
+    if (type === 'recurrent' && recurrence === 'custom' && customDays.length === 0) {
+      setCustomDaysError('Selecciona al menos un día');
+      return;
+    }
     
     onSave({
-      title,
+      title: title.trim(),
       type,
       module,
       priority,
@@ -201,12 +208,10 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                           </button>
                         ))}
                       </div>
+                      {customDaysError && (
+                        <p className="text-xs text-red-400 mt-2">{customDaysError}</p>
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
-
-              <div className="pt-6 flex items-center justify-between border-t border-[#f3f4f6] dark:border-[#262626]">
                 {initialData && onDelete ? (
                   <button 
                     type="button" 

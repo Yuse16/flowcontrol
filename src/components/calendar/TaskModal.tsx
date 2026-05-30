@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarTask } from '@/types/calendar';
 import { PriorityLevel } from '@/types/common';
+import { formatDateString } from '@/utils/date';
 import { X, Trash2 } from 'lucide-react';
 
 interface TaskModalProps {
@@ -23,6 +24,8 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
   const [moveDate, setMoveDate] = useState('');
 
   useEffect(() => {
+    if (!isOpen) return;
+    setShowDatePicker(false);
     if (initialData) {
       setTitle(initialData.title);
       setDescription(initialData.description || '');
@@ -32,17 +35,15 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
       setTitle('');
       setDescription('');
       setPriority('medium');
-      setMoveDate(new Date().toISOString().split('T')[0]);
+      setMoveDate(formatDateString(selectedDate));
     }
-  }, [initialData, isOpen]);
-
-  if (!isOpen) return null;
+  }, [initialData, isOpen, selectedDate]);
 
   const handleMoveTomorrow = () => {
     if (!onMove) return;
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    onMove(tomorrow.toISOString().split('T')[0]);
+    onMove(formatDateString(tomorrow));
     onClose();
   };
 
@@ -55,7 +56,7 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    onSave(title, priority, description);
+    onSave(title.trim(), priority, description);
     onClose();
   };
 
@@ -69,18 +70,22 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={onClose}
+        >
           <motion.div 
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-6 border-b border-border">
               <h3 className="text-xl font-semibold text-foreground">
                 {initialData ? 'Editar Tarea' : 'Nueva Tarea'}
               </h3>
-              <button onClick={onClose} className="text-gray-500 hover:text-foreground transition-colors">
+              <button type="button" onClick={onClose} className="text-gray-500 hover:text-foreground transition-colors">
                 <X size={20} />
               </button>
             </div>

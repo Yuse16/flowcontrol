@@ -21,7 +21,6 @@ export default function DashboardPage() {
   const { tasks: calTasks, isLoaded: calLoaded } = useCalendarTasks();
   const { getActivitiesForDate, isLoaded: actLoaded } = useAdvancedActivities();
   const { currentUser } = useAuth();
-
   const todayStr = formatDateString(new Date());
   const todayActivities = getActivitiesForDate(new Date());
 
@@ -156,7 +155,7 @@ export default function DashboardPage() {
       <section className="hidden lg:grid lg:grid-cols-2 gap-4">
         <div className="bg-uzala-card border border-uzala-border rounded-2xl p-5">
           <h3 className="text-sm font-semibold text-gray-400 mb-3">Calendario hoy</h3>
-          <p className="text-2xl font-bold text-white">{calTasks.filter(t => !t.completed).length}</p>
+          <p className="text-2xl font-bold text-white">{calTasks.filter(t => !t.completed && t.date === todayStr).length}</p>
           <p className="text-xs text-gray-500">eventos pendientes</p>
         </div>
         <div className="bg-uzala-card border border-uzala-border rounded-2xl p-5">

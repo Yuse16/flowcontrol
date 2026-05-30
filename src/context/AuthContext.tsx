@@ -14,6 +14,7 @@ interface AuthContextType {
   updateProfile: (name: string) => void;
   switchRole: (role: UserRole) => void;
   isManager: boolean;
+  isLoaded: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,11 +40,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [currentUser, isLoaded]);
 
   const updateProfile = (name: string) => {
-    setCurrentUser(prev => ({ ...prev, name }));
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    setCurrentUser(prev => ({ ...prev, name: trimmed }));
   };
 
   const switchRole = (role: UserRole) => {
-    // Para modo producción con BD real aquí cambiaríamos de sesión
+    setCurrentUser(prev => ({ ...prev, role }));
   };
 
   return (
@@ -52,7 +55,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       users: MOCK_USERS, 
       updateProfile,
       switchRole,
-      isManager: currentUser.role === 'manager' || currentUser.role === 'admin'
+      isManager: currentUser.role === 'manager' || currentUser.role === 'admin',
+      isLoaded,
     }}>
       {children}
     </AuthContext.Provider>

@@ -21,9 +21,14 @@ export default function TodosPage() {
 
   const [activeTab, setActiveTab] = useState('pending');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTask, setSelectedTask] = useState<TodoTask | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const todayStr = formatDateString(new Date());
+
+  const selectedTask = useMemo(() => {
+    if (!selectedTaskId) return null;
+    return tasks.find(t => t.id === selectedTaskId) ?? null;
+  }, [tasks, selectedTaskId]);
 
   const todayActivitiesAsTodos = useMemo(() => {
     return getActivitiesForDate(new Date()).map(act => {
@@ -65,7 +70,7 @@ export default function TodosPage() {
     if (task.isActivity) {
       toggleCompletion(task.id, todayStr);
     } else {
-      setSelectedTask(task);
+      setSelectedTaskId(task.id);
     }
   };
 
@@ -169,7 +174,17 @@ export default function TodosPage() {
         </div>
       </section>
 
-      {/* Desktop kanban fallback */}
+      {/* Mobile quick add */}
+      <div className="md:hidden fixed bottom-28 left-0 right-0 px-4 z-30">
+        <button
+          onClick={() => addTask('Nueva tarea', 'pending')}
+          className="w-full py-3 bg-uzala-card border border-uzala-border rounded-2xl text-sm font-semibold text-uzala-purple"
+        >
+          + Agregar pendiente
+        </button>
+      </div>
+
+      {/* Desktop */}
       <div className="hidden md:block text-center py-4">
         <button
           onClick={() => addTask('Nueva tarea', 'pending')}
@@ -182,9 +197,9 @@ export default function TodosPage() {
       <TodoDetailPanel
         task={selectedTask}
         isOpen={!!selectedTask}
-        onClose={() => setSelectedTask(null)}
+        onClose={() => setSelectedTaskId(null)}
         onUpdate={updateTask}
-        onDelete={(id) => { deleteTask(id); setSelectedTask(null); }}
+        onDelete={(id) => { deleteTask(id); setSelectedTaskId(null); }}
       />
     </div>
   );

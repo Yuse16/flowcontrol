@@ -9,9 +9,17 @@ import { Users, AlertTriangle, Briefcase, TrendingUp } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 export default function ManagerPage() {
-  const { isManager, users } = useAuth();
+  const { isManager, users, isLoaded } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
+
+  if (!isLoaded) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-4 border-uzala-purple border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   if (!isManager) {
     redirect('/dashboard');
@@ -24,7 +32,6 @@ export default function ManagerPage() {
 
   const handleSaveAssignment = (userId: string, title: string, priority: string) => {
     console.log(`Assigned "${title}" [${priority}] to user ${userId}`);
-    // MVP: In a real app this saves to state/DB.
     alert(`¡Tarea asignada con éxito al empleado!`);
   };
 

@@ -17,6 +17,23 @@ interface ReminderContextType {
 
 const ReminderContext = createContext<ReminderContextType | undefined>(undefined);
 
+function resolveActiveOnLoad(parsed: Reminder[]): { reminders: Reminder[]; active: Reminder | null } {
+  const now = Date.now();
+  const stuckActive = parsed.find(r => r.status === 'active');
+  if (stuckActive) {
+    return { reminders: parsed, active: stuckActive };
+  }
+  const due = parsed.find(r => r.status === 'pending' && now >= r.targetTime);
+  if (due) {
+    const active = { ...due, status: 'active' as const };
+    return {
+      reminders: parsed.map(r => (r.id === due.id ? active : r)),
+      active,
+    };
+  }
+  return { reminders: parsed, active: null };
+}
+
 export function ReminderProvider({ children }: { children: React.ReactNode }) {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [activeReminder, setActiveReminder] = useState<Reminder | null>(null);
@@ -24,35 +41,32 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const checkInterval = useRef<NodeJS.Timeout | null>(null);
 
-  // Load from storage
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
-        setReminders(parsed);
+        const parsed = JSON.parse(stored) as Reminder[];
+        const { reminders: nextReminders, active } = resolveActiveOnLoad(parsed);
+        setReminders(nextReminders);
+        setActiveReminder(active);
       } catch (e) {}
     }
     setIsLoaded(true);
   }, []);
 
-  // Save to storage
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
     }
   }, [reminders, isLoaded]);
 
-  // Background checker
   useEffect(() => {
     if (!isLoaded) return;
 
     checkInterval.current = setInterval(() => {
       const now = Date.now();
-      // Solo buscar si no hay una alerta activa ya en pantalla
       if (!activeReminder) {
         const nextActive = reminders.find(r => r.status === 'pending' && now >= r.targetTime);
-        
         if (nextActive) {
           setReminders(prev => prev.map(r => r.id === nextActive.id ? { ...r, status: 'active' } : r));
           setActiveReminder({ ...nextActive, status: 'active' });
@@ -66,10 +80,12 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
   }, [reminders, isLoaded, activeReminder]);
 
   const addReminder = useCallback((message: string, delayMs: number) => {
+    const trimmed = message.trim();
+    if (!trimmed) return;
     const id = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
     const newReminder: Reminder = {
       id,
-      message,
+      message: trimmed,
       targetTime: Date.now() + delayMs,
       status: 'pending',
       type: 'critical',
@@ -89,16 +105,14 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
     const currentMessage = activeReminder.message;
     const currentType = activeReminder.type;
 
-    // Mark current as dismissed in the list
     setReminders(prev => prev.map(r => r.id === currentId ? { ...r, status: 'dismissed' } : r));
     
-    // Schedule follow-up if it was critical
     if (currentType === 'critical') {
       const followUpId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
       const followUp: Reminder = {
         id: followUpId,
         message: `Confirmación: ¿Realmente terminaste "${currentMessage}"?`,
-        targetTime: Date.now() + (1000 * 60 * 60), // +1 Hour
+        targetTime: Date.now() + (1000 * 60 * 60),
         status: 'pending',
         type: 'followup',
         createdAt: Date.now()
