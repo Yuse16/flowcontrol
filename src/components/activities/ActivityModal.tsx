@@ -212,6 +212,11 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData }
                         <p className="text-xs text-red-400 mt-2">{customDaysError}</p>
                       )}
                     </div>
+                  )}
+                </div>
+              )}
+
+              <div className="pt-6 flex items-center justify-between border-t border-[#f3f4f6] dark:border-[#262626]">
                 {initialData && onDelete ? (
                   <button 
                     type="button" 
