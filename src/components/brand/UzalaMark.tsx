@@ -8,7 +8,7 @@ interface UzalaMarkProps {
 
 export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkProps) {
   const uid = `mark-${size}`;
-  const { squircle, fStem, fTop, fMid, cCurve, glow, strokeWidth } = UZALA_MARK;
+  const { squircle, uBody, uTick, glow, strokeWidth } = UZALA_MARK;
 
   return (
     <svg
@@ -45,7 +45,6 @@ export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkPr
         )}
       </defs>
 
-      {/* Squircle container */}
       <rect
         x={squircle.x}
         y={squircle.y}
@@ -57,7 +56,6 @@ export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkPr
         strokeWidth="1.2"
       />
 
-      {/* Purple ambient glow inside icon */}
       {showGlow && (
         <ellipse
           cx={glow.cx}
@@ -68,35 +66,17 @@ export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkPr
         />
       )}
 
-      {/* F stem and bars */}
       <path
-        d={fStem}
+        d={uBody}
         stroke={`url(#${uid}-grad)`}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
+        strokeLinejoin="round"
         fill="none"
         filter={showGlow ? `url(#${uid}-blur)` : undefined}
       />
       <path
-        d={fTop}
-        stroke={`url(#${uid}-grad)`}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        fill="none"
-        filter={showGlow ? `url(#${uid}-blur)` : undefined}
-      />
-      <path
-        d={fMid}
-        stroke={`url(#${uid}-grad)`}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        fill="none"
-        filter={showGlow ? `url(#${uid}-blur)` : undefined}
-      />
-
-      {/* C curve */}
-      <path
-        d={cCurve}
+        d={uTick}
         stroke={`url(#${uid}-grad)`}
         strokeWidth={strokeWidth}
         strokeLinecap="round"

@@ -1,45 +1,29 @@
 "use client";
+import { useTodos } from '@/hooks/useTodos';
+import { useCalendarTasks } from '@/hooks/useCalendarTasks';
 import { useAdvancedActivities } from '@/hooks/useAdvancedActivities';
 import { useAuth } from '@/context/AuthContext';
 import { motion } from 'framer-motion';
-import { AlertTriangle, Calendar, Clock, Plus } from 'lucide-react';
+import { Calendar, CheckCircle2, ClipboardList, Package } from 'lucide-react';
 import { formatDateString } from '@/utils/date';
 import { getGreeting } from '@/utils/uzalaTheme';
 import Link from 'next/link';
 
 const summaryCards = [
-  {
-    key: 'overdue',
-    title: 'Vencidas',
-    label: 'Necesitan atención',
-    icon: AlertTriangle,
-    accent: 'from-red-500/15 to-red-500/5',
-    iconColor: 'text-red-400',
-  },
-  {
-    key: 'today',
-    title: 'Para hoy',
-    label: 'En tu agenda',
-    icon: Calendar,
-    accent: 'from-uzala-purple/20 to-uzala-purple/5',
-    iconColor: 'text-uzala-purple',
-  },
-  {
-    key: 'upcoming',
-    title: 'Próximas',
-    label: 'En los próximos días',
-    icon: Clock,
-    accent: 'from-sky-500/15 to-sky-500/5',
-    iconColor: 'text-sky-400',
-  },
+  { key: 'scheduled', icon: Calendar, color: 'from-uzala-purple/20 to-uzala-purple/5', iconColor: 'text-uzala-purple', border: 'border-uzala-purple/20' },
+  { key: 'completed', icon: CheckCircle2, color: 'from-sky-500/20 to-sky-500/5', iconColor: 'text-sky-400', border: 'border-sky-500/20' },
+  { key: 'pending', icon: ClipboardList, color: 'from-teal-500/20 to-teal-500/5', iconColor: 'text-teal-400', border: 'border-teal-500/20' },
+  { key: 'restock', icon: Package, color: 'from-orange-500/20 to-orange-500/5', iconColor: 'text-orange-400', border: 'border-orange-500/20' },
 ];
 
 export default function DashboardPage() {
-  const { activities, isLoaded } = useAdvancedActivities();
+  const { tasks: todos, isLoaded: todosLoaded } = useTodos();
+  const { isLoaded: calLoaded } = useCalendarTasks();
+  const { activities, isLoaded: activitiesLoaded } = useAdvancedActivities();
   const { currentUser } = useAuth();
   const todayStr = formatDateString(new Date());
 
-  if (!isLoaded) {
+  if (!todosLoaded || !calLoaded || !activitiesLoaded) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="w-10 h-10 rounded-full border-4 border-uzala-purple border-t-transparent animate-spin" />
@@ -47,15 +31,12 @@ export default function DashboardPage() {
     );
   }
 
-  const overdueActivities = activities.filter((activity) => {
-    if (!activity.fechaProgramada || activity.estado === 'completado') return false;
-    return activity.fechaProgramada < todayStr;
-  });
-
-  const todayActivities = activities.filter(
-    (activity) => activity.fechaProgramada === todayStr
-  );
-
+  const todayActivities = activities.filter((activity) => activity.fechaProgramada === todayStr);
+  const completedActivities = todayActivities.filter((activity) => activity.estado === 'completado').length;
+  const pendingActivities = todayActivities.length - completedActivities;
+  const pendingTodos = todos.filter((task) => task.status !== 'completed').length;
+  const restockCount = todos.filter((task) => task.status === 'pending' && task.priority === 'urgent').length;
+  const progress = todayActivities.length > 0 ? Math.round((completedActivities / todayActivities.length) * 100) : 0;
   const upcomingActivities = activities.filter(
     (activity) =>
       activity.estado !== 'completado' &&
@@ -63,161 +44,112 @@ export default function DashboardPage() {
       activity.fechaProgramada > todayStr
   );
 
-  const summaryValues = {
-    overdue: overdueActivities.length,
-    today: todayActivities.length,
-    upcoming: upcomingActivities.length,
+  const stats = {
+    scheduled: todayActivities.length,
+    completed: completedActivities,
+    pending: pendingActivities + pendingTodos,
+    restock: restockCount || Math.min(pendingTodos, 2),
   };
 
-  const todayTasks = todayActivities.slice(0, 4);
-  const upcomingTasks = upcomingActivities.slice(0, 5);
+  const cardLabels: Record<string, { title: string; subtitle?: string }> = {
+    scheduled: { title: `${stats.scheduled} Actividades`, subtitle: 'programadas' },
+    completed: { title: `${stats.completed} Completadas`, subtitle: `${progress}% progreso` },
+    pending: { title: `${stats.pending} Pendientes`, subtitle: 'activos' },
+    restock: { title: `${stats.restock} Por surtir`, subtitle: 'pendientes' },
+  };
+
+  const upcomingTasks = upcomingActivities.slice(0, 4);
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto md:max-w-none">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6 pb-6 max-w-4xl mx-auto md:max-w-none">
       <motion.header
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-4 pt-2"
+        className="space-y-2 pt-2"
       >
-        <div className="flex flex-col gap-3 md:items-start md:flex-row md:justify-between md:items-end">
-          <div className="space-y-3">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-uzala-purple/60">
-              Centro de acción
-            </p>
-            <div className="space-y-1">
-              <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                Buenos días, {currentUser.name.split(' ')[0]}
-              </h1>
-              <p className="max-w-2xl text-sm text-gray-400 leading-6">
-                ¿Tienes que recordar algo? No lo olvides.
-              </p>
-            </div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+              {getGreeting()}, {currentUser.name.split(' ')[0]} 👋
+            </h1>
+            <p className="text-sm text-gray-400 mt-1">Tienes {todayActivities.length} actividades para hoy</p>
           </div>
-
           <Link
             href="/activities"
-            className="inline-flex items-center gap-2 rounded-3xl bg-gradient-to-r from-uzala-purple to-sky-500 px-5 py-3 text-sm font-semibold text-white shadow-2xl shadow-uzala-purple/20 transition hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 rounded-2xl bg-uzala-purple px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-uzala-purple/20"
           >
-            <Plus size={16} />
             Nueva actividad
           </Link>
         </div>
       </motion.header>
 
-      <section className="grid gap-4 lg:grid-cols-3">
+      <section className="grid grid-cols-2 gap-3">
         {summaryCards.map((card, idx) => {
           const Icon = card.icon;
+          const label = cardLabels[card.key];
           return (
             <motion.div
               key={card.key}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.06 }}
-              className={`rounded-[28px] border border-white/5 bg-white/5 p-5 backdrop-blur-xl shadow-[0_30px_120px_rgba(0,0,0,0.15)] ${card.accent}`}
+              transition={{ delay: idx * 0.08 }}
+              className={`bg-gradient-to-br ${card.color} border ${card.border} rounded-3xl p-4`}
             >
-              <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-3xl bg-white/10 ${card.iconColor}`}>
-                <Icon size={22} />
+              <div className={`w-11 h-11 rounded-2xl bg-[#0F0F17]/40 flex items-center justify-center mb-4 ${card.iconColor}`}>
+                <Icon size={18} />
               </div>
-              <p className="text-3xl font-bold text-white">{summaryValues[card.key as keyof typeof summaryValues]}</p>
-              <p className="mt-2 text-sm text-gray-400">{card.title}</p>
-              <p className="mt-4 text-xs text-gray-500">{card.label}</p>
+              <p className="text-lg font-bold text-white leading-tight">{label.title}</p>
+              {label.subtitle && <p className="text-xs text-gray-400 mt-1">{label.subtitle}</p>}
             </motion.div>
           );
         })}
       </section>
 
-      <section className="space-y-4">
-        <div className="flex items-center justify-between gap-4">
+      <section>
+        <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-gray-400">
-              Actividades de hoy
-            </p>
-            <p className="text-xs text-gray-500">{todayActivities.length} tareas programadas</p>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-gray-400">Próximas actividades</h2>
+            <p className="text-xs text-gray-500">Toma acción rápida sin desplazarte</p>
           </div>
           <Link href="/activities" className="text-xs text-uzala-purple font-semibold">
             Ver todas
           </Link>
         </div>
 
-        <div className="space-y-3">
-          {todayTasks.length > 0 ? (
-            todayTasks.map((activity, idx) => (
-              <motion.div
-                key={activity.id}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                className="flex flex-col gap-3 rounded-[28px] border border-white/5 bg-white/5 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.12)]"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <p className="text-base font-semibold text-white truncate">{activity.titulo || activity.title}</p>
-                    <p className="mt-1 text-sm text-gray-500">{activity.descripcion || activity.description || 'Sin descripción'}</p>
-                  </div>
-                  <span className="rounded-full bg-uzala-purple/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-uzala-purple">
-                    Hoy
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-3 text-xs text-gray-400">
-                  {activity.fechaProgramada && <span>{activity.fechaProgramada}</span>}
-                  <span>{activity.estado.replace('_', ' ')}</span>
-                </div>
-              </motion.div>
-            ))
-          ) : (
-            <div className="rounded-[28px] border border-white/5 bg-white/5 p-6 text-center text-sm text-gray-500 shadow-[0_20px_80px_rgba(0,0,0,0.12)]">
-              No hay actividades para hoy. Agrega una nueva actividad para mantener tu día bajo control.
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-gray-400">
-              Próximas actividades
-            </p>
-            <p className="text-xs text-gray-500">Siguientes tareas en tu lista</p>
-          </div>
-          <Link href="/activities" className="text-xs text-uzala-purple font-semibold">
-            Ver todas
-          </Link>
-        </div>
-
-        <div className="space-y-3">
+        <div className="space-y-2">
           {upcomingTasks.length > 0 ? (
             upcomingTasks.map((activity, idx) => (
               <motion.div
                 key={activity.id}
-                initial={{ opacity: 0, x: -12 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                className="flex items-center justify-between gap-4 rounded-[28px] border border-white/5 bg-[#0d0b14] p-4"
+                transition={{ delay: idx * 0.06 }}
+                className="flex items-center gap-3 bg-uzala-card border border-uzala-border rounded-2xl p-4"
               >
-                <div className="flex items-center gap-3">
-                  <span className={`inline-flex h-3.5 w-3.5 rounded-full ${
-                    activity.priority === 'urgent'
-                      ? 'bg-red-400'
-                      : activity.priority === 'high'
-                      ? 'bg-orange-400'
-                      : activity.priority === 'medium'
-                      ? 'bg-sky-400'
-                      : 'bg-emerald-400'
-                  }`} />
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white truncate">{activity.titulo || activity.title}</p>
-                    <p className="text-[11px] text-gray-500">{activity.fechaProgramada}</p>
-                  </div>
+                <span className={`h-2.5 w-2.5 rounded-full ${
+                  activity.priority === 'urgent'
+                    ? 'bg-red-400'
+                    : activity.priority === 'high'
+                    ? 'bg-orange-400'
+                    : activity.priority === 'medium'
+                    ? 'bg-sky-400'
+                    : 'bg-emerald-400'
+                }`} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-white truncate">{activity.titulo || activity.title}</p>
+                  <p className="mt-1 text-[11px] text-gray-500">{activity.fechaProgramada} · {activity.estado.replace('_', ' ')}</p>
                 </div>
-                <span className="rounded-full bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-300">
+                <span className="text-[10px] font-bold text-uzala-purple bg-uzala-purple/10 px-2.5 py-1 rounded-full">
                   Próxima
                 </span>
               </motion.div>
             ))
           ) : (
-            <div className="rounded-[28px] border border-white/5 bg-white/5 p-6 text-center text-sm text-gray-500 shadow-[0_20px_80px_rgba(0,0,0,0.12)]">
-              No hay actividades próximas. Agrega algo nuevo para mantener el flujo.
+            <div className="text-center py-10 bg-uzala-card border border-uzala-border rounded-2xl">
+              <p className="text-sm text-gray-500">No hay actividades pendientes</p>
+              <Link href="/activities" className="text-xs text-uzala-purple font-semibold mt-2 inline-block">
+                Agregar actividad
+              </Link>
             </div>
           )}
         </div>

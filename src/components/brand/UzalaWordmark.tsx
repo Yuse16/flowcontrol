@@ -17,20 +17,22 @@ export function UzalaWordmark({ size = 'md', className }: UzalaWordmarkProps) {
   return (
     <div
       className={clsx(
-        'inline-flex items-center gap-2 font-black uppercase leading-none',
+        'inline-flex items-center gap-1 font-black uppercase leading-none',
         sizeClasses[size],
         className
       )}
       style={{ width: WORDMARK_WIDTHS[size] }}
-      aria-label="FlowControl"
+      aria-label="UZALA"
       role="img"
     >
-      <span className="text-white">FL</span>
+      <span className="text-white">U</span>
+      <span className="text-white">Z</span>
       <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-uzala-purple via-uzala-blue to-uzala-cyan">
-        O
+        A
         <span className="absolute left-1/2 bottom-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-uzala-purple" />
       </span>
-      <span className="text-white">W</span>
+      <span className="text-white">L</span>
+      <span className="text-white">A</span>
     </div>
   );
 }

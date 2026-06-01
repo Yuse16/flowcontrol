@@ -30,13 +30,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "FlowControl | Gestión Inteligente",
-  description: "¿Tienes que recordar algo? FlowControl — app de actividades, pendientes y productividad.",
-  applicationName: "FlowControl",
+  title: "UZALA | Gestión Inteligente",
+  description: "¿Tienes que recordar algo? UZALA — app de actividades, pendientes y productividad.",
+  applicationName: "UZALA",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "FlowControl",
+    title: "UZALA",
   },
   formatDetection: {
     telephone: false,

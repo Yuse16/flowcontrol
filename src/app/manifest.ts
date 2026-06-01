@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'FlowControl — Gestión Inteligente',
-    short_name: 'FlowControl',
+    name: 'UZALA — Gestión Inteligente',
+    short_name: 'UZALA',
     description: 'App móvil de gestión de actividades, calendario y pendientes.',
     start_url: '/dashboard',
     display: 'standalone',

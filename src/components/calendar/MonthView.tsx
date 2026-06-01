@@ -26,15 +26,13 @@ export function MonthView({ currentDate, activities, onDayClick, onTaskClick, on
   };
 
   return (
-    <div className="flex-1 bg-white dark:bg-[#171717] rounded-2xl flex flex-col border border-gray-100 dark:border-[#1f1f1f] shadow-sm overflow-hidden h-full max-h-[calc(100vh-16rem)] md:max-h-none" data-design-id="month-view-container">
-      {/* Days of Week Header - Smaller */}
-      <div className="grid grid-cols-7 border-b border-gray-50 dark:border-[#1f1f1f] bg-gray-50/30 dark:bg-white/[0.01]">
+    <div className="flex-1 bg-uzala-card rounded-[32px] flex flex-col border border-uzala-border shadow-2xl overflow-hidden h-full max-h-[calc(100vh-16rem)] md:max-h-none" data-design-id="month-view-container">
+      <div className="grid grid-cols-7 border-b border-uzala-border bg-[#0f1119]">
         {daysOfWeek.map(d => (
           <div key={d} className="py-2.5 text-center text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">{d}</div>
         ))}
       </div>
 
-      {/* Calendar Grid - More Compact */}
       <div className="grid grid-cols-7 flex-1 min-h-[400px] md:min-h-[500px] overflow-y-auto">
         {grid.map((date, i) => {
           const isCurrentMonth = date.getMonth() === currentDate.getMonth();
@@ -56,22 +54,22 @@ export function MonthView({ currentDate, activities, onDayClick, onTaskClick, on
               onDragLeave={() => setDragOverDate(null)}
               onDrop={(e) => handleDrop(e, dateStr)}
               className={`
-                relative border-r border-b border-gray-50 dark:border-[#1f1f1f] p-2 flex flex-col gap-1 
-                transition-all hover:bg-gray-50/50 dark:hover:bg-white/[0.01] cursor-pointer min-h-[70px] md:min-h-[100px]
-                ${!isCurrentMonth ? 'bg-gray-50/20 dark:bg-black/10' : ''} 
-                ${isDraggingOver ? 'bg-primary/5 ring-2 ring-inset ring-primary/10' : ''}
+                relative border-r border-b border-uzala-border p-2 flex flex-col gap-1 
+                transition-all hover:bg-white/5 cursor-pointer min-h-[70px] md:min-h-[100px]
+                ${!isCurrentMonth ? 'bg-white/5' : ''} 
+                ${isDraggingOver ? 'bg-uzala-purple/10 ring-2 ring-inset ring-uzala-purple/20' : ''}
               `}
               data-design-id={`calendar-day-${dateStr}`}
             >
               <div className="flex justify-between items-start">
                 <span className={`
                   text-[11px] font-bold w-6 h-6 flex items-center justify-center rounded-lg transition-all
-                  ${isToday ? 'bg-primary text-white shadow-sm shadow-primary/30' : isCurrentMonth ? 'text-gray-700 dark:text-white' : 'text-gray-300'}
+                  ${isToday ? 'bg-uzala-purple text-white shadow-sm shadow-uzala-purple/30' : isCurrentMonth ? 'text-white' : 'text-gray-400'}
                 `}>
                   {date.getDate()}
                 </span>
                 {dayTasks.length > 0 && !isToday && (
-                  <div className="w-1 h-1 rounded-full bg-primary/30 mt-2.5" />
+                  <div className="w-1 h-1 rounded-full bg-uzala-purple/30 mt-2.5" />
                 )}
               </div>
 

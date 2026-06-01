@@ -67,35 +67,35 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
   };
 
   return (
-    <div className="flex-1 bg-white dark:bg-[#171717] rounded-[32px] border border-border shadow-sm overflow-hidden flex flex-col relative" data-design-id="day-view-container">
-      <div className="p-8 border-b border-border bg-gray-50/30 dark:bg-white/[0.01] z-10">
+    <div className="flex-1 bg-uzala-card rounded-[32px] border border-uzala-border shadow-2xl overflow-hidden flex flex-col relative" data-design-id="day-view-container">
+      <div className="p-8 border-b border-uzala-border bg-[#0f1119] z-10">
         <div className="flex justify-between items-end mb-5">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Resumen del Día</p>
-            <h2 className="text-3xl font-black text-[#111827] dark:text-white tracking-tighter">Actividades</h2>
-            <p className="text-sm text-gray-500 font-medium mt-1">{completedCount} de {totalCount} completadas</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-uzala-purple mb-1">Resumen del Día</p>
+            <h2 className="text-3xl font-black text-white tracking-tighter">Actividades</h2>
+            <p className="text-sm text-gray-400 font-medium mt-1">{completedCount} de {totalCount} completadas</p>
           </div>
-          <div className="text-5xl font-black text-primary tracking-tighter">
+          <div className="text-5xl font-black text-uzala-purple tracking-tighter">
             {progress}%
           </div>
         </div>
-        <div className="w-full h-3 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden relative border border-white/10 shadow-inner">
+        <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden relative border border-white/10 shadow-inner">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.8, ease: 'circOut' }}
-            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-uzala-purple to-uzala-blue rounded-full shadow-[0_0_15px_rgba(139,92,246,0.35)]"
           />
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar p-8 pb-24 md:pb-8 safe-bottom">
         {totalCount === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-gray-500 py-20">
-            <div className="w-20 h-20 mb-6 rounded-[24px] bg-gray-50 dark:bg-white/5 flex items-center justify-center shadow-inner">
+          <div className="h-full flex flex-col items-center justify-center text-gray-400 py-20">
+            <div className="w-20 h-20 mb-6 rounded-[24px] bg-white/5 flex items-center justify-center shadow-inner">
               <Layers size={32} className="opacity-20" />
             </div>
-            <p className="text-xl font-black text-[#111827] dark:text-white tracking-tight uppercase tracking-widest">Día Libre</p>
+            <p className="text-xl font-black text-white tracking-tight uppercase tracking-widest">Día Libre</p>
             <p className="text-sm text-center max-w-xs mt-3 text-gray-400 font-medium">No hay actividades programadas para este día. Agrega una nueva actividad desde el calendario o desde Actividades.</p>
           </div>
         ) : (

@@ -22,14 +22,10 @@ export const UZALA_ICON_GRADIENT = [
 export const UZALA_MARK = {
   squircle: { x: 5, y: 5, w: 90, h: 90, rx: 22, fill: UZALA_COLORS.bgCard },
   strokeWidth: 11.5,
-  /** Vertical stem of the F mark */
-  fStem: 'M 36 28 V 72',
-  /** Top bar of the F mark */
-  fTop: 'M 36 28 H 68',
-  /** Middle bar of the F mark */
-  fMid: 'M 36 48 H 58',
-  /** C-shape curve for FlowControl */
-  cCurve: 'M 72 32 C 62 32 56 42 56 50 C 56 58 62 68 72 68',
+  /** U-shape body */
+  uBody: 'M 30 28 V 56 Q 30 70 50 70 Q 70 70 70 56 V 28',
+  /** Check mark inside the U */
+  uTick: 'M 46 52 L 56 62 L 74 40',
   /** Ambient glow ellipse behind mark */
   glow: { cx: 50, cy: 48, rx: 32, ry: 28 },
 } as const;
