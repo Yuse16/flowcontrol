@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 const summaryCards = [
   { key: 'scheduled', icon: Calendar, color: 'from-uzala-purple/20 to-uzala-purple/5', iconColor: 'text-uzala-purple', border: 'border-uzala-purple/20' },
-  { key: 'completed', icon: CheckCircle2, color: 'from-sky-500/20 to-sky-500/5', iconColor: 'text-sky-400', border: 'border-sky-500/20' },
+  { key: 'completed', icon: CheckCircle2, color: 'from-green-500/20 to-green-500/5', iconColor: 'text-green-400', border: 'border-green-500/20' },
   { key: 'pending', icon: ClipboardList, color: 'from-teal-500/20 to-teal-500/5', iconColor: 'text-teal-400', border: 'border-teal-500/20' },
   { key: 'restock', icon: Package, color: 'from-orange-500/20 to-orange-500/5', iconColor: 'text-orange-400', border: 'border-orange-500/20' },
 ];
@@ -31,34 +31,41 @@ export default function DashboardPage() {
     );
   }
 
+  // Filtrado de actividades de hoy
   const todayActivities = activities.filter((activity) => activity.fechaProgramada === todayStr);
-  const completedActivities = todayActivities.filter((activity) => activity.estado === 'completado').length;
-  const pendingActivities = todayActivities.length - completedActivities;
+  const completedToday = todayActivities.filter((activity) => activity.estado === 'completado').length;
+  const pendingToday = todayActivities.length - completedToday;
+  
+  // Pendientes globales (excluyendo completados)
   const pendingTodos = todos.filter((task) => task.status !== 'completed').length;
-  const restockCount = todos.filter((task) => task.status === 'pending' && task.priority === 'urgent').length;
-  const progress = todayActivities.length > 0 ? Math.round((completedActivities / todayActivities.length) * 100) : 0;
-  const upcomingActivities = activities.filter(
-    (activity) =>
-      activity.estado !== 'completado' &&
-      activity.fechaProgramada &&
+  
+  // Lógica de "Por surtir" (prioridad urgente o tags específicos)
+  const restockCount = activities.filter(a => a.estado !== 'completado' && a.priority === 'urgent' && (a.titulo.toLowerCase().includes('surtir') || a.titulo.toLowerCase().includes('comprar'))).length;
+  
+  const progress = todayActivities.length > 0 ? Math.round((completedToday / todayActivities.length) * 100) : 0;
+  
+  // Actividades futuras PENDIENTES
+  const upcomingTasks = activities
+    .filter(activity => 
+      activity.estado !== 'completado' && 
+      activity.fechaProgramada && 
       activity.fechaProgramada > todayStr
-  );
+    )
+    .slice(0, 4);
 
   const stats = {
     scheduled: todayActivities.length,
-    completed: completedActivities,
-    pending: pendingActivities + pendingTodos,
-    restock: restockCount || Math.min(pendingTodos, 2),
+    completed: completedToday,
+    pending: pendingToday + pendingTodos,
+    restock: restockCount || Math.min(pendingTodos, 3),
   };
 
   const cardLabels: Record<string, { title: string; subtitle?: string }> = {
-    scheduled: { title: `${stats.scheduled} Actividades`, subtitle: 'programadas' },
-    completed: { title: `${stats.completed} Completadas`, subtitle: `${progress}% progreso` },
-    pending: { title: `${stats.pending} Pendientes`, subtitle: 'activos' },
-    restock: { title: `${stats.restock} Por surtir`, subtitle: 'pendientes' },
+    scheduled: { title: `${stats.scheduled} Hoy`, subtitle: 'programadas' },
+    completed: { title: `${stats.completed} Listas`, subtitle: `${progress}% progreso` },
+    pending: { title: `${stats.pending} Pendientes`, subtitle: 'por ejecutar' },
+    restock: { title: `${stats.restock} Por surtir`, subtitle: 'requieren atención' },
   };
-
-  const upcomingTasks = upcomingActivities.slice(0, 4);
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6 pb-6 max-w-4xl mx-auto md:max-w-none">
@@ -72,7 +79,13 @@ export default function DashboardPage() {
             <h1 className="text-3xl md:text-4xl font-semibold italic text-white tracking-tight">
               {getGreeting()}, {currentUser.name.split(' ')[0]} 👋
             </h1>
-            <p className="text-sm text-gray-400 mt-1">Tienes {todayActivities.length} actividades para hoy</p>
+            <p className="text-sm text-gray-400 mt-1">
+              {pendingToday > 0 
+                ? `Te quedan ${pendingToday} actividades pendientes para hoy` 
+                : todayActivities.length > 0 && pendingToday === 0
+                  ? '¡Felicidades! Has terminado tus actividades de hoy ✨'
+                  : 'No tienes actividades programadas para hoy'}
+            </p>
           </div>
           <Link
             href="/activities"
@@ -109,7 +122,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-gray-400">Próximas actividades</h2>
-            <p className="text-xs text-gray-500">Toma acción rápida sin desplazarte</p>
+            <p className="text-xs text-gray-500">Anticípate a tus tareas futuras</p>
           </div>
           <Link href="/activities" className="text-xs text-uzala-purple font-semibold">
             Ver todas
@@ -146,7 +159,7 @@ export default function DashboardPage() {
             ))
           ) : (
             <div className="text-center py-10 bg-uzala-card border border-uzala-border rounded-2xl">
-              <p className="text-sm text-gray-500">No hay actividades pendientes</p>
+              <p className="text-sm text-gray-500">No hay actividades futuras pendientes</p>
               <Link href="/activities" className="text-xs text-uzala-purple font-semibold mt-2 inline-block">
                 Agregar actividad
               </Link>

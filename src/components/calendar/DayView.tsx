@@ -34,7 +34,7 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
         exit={{ opacity: 0, scale: 0.95 }}
         className={`group flex items-start gap-4 p-4 rounded-xl border transition-all hover:-translate-y-0.5 hover:shadow-lg ${
           completed 
-            ? 'bg-background border-border opacity-60' 
+            ? 'bg-green-500/5 border-green-500/20 opacity-80' 
             : isOverdue 
               ? 'bg-red-500/5 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]' 
               : 'bg-card border-border hover:border-primary/50'
@@ -42,9 +42,9 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
       >
         <button 
           onClick={() => onToggleComplete(act.id)}
-          className={`mt-0.5 flex-shrink-0 transition-all active:scale-90 ${completed ? 'text-primary' : 'text-gray-400 hover:text-primary'}`}
+          className={`mt-0.5 flex-shrink-0 transition-all active:scale-90 ${completed ? 'text-green-500' : 'text-gray-400 hover:text-primary'}`}
         >
-          {completed ? <CheckCircle2 size={24} className="fill-primary/20" /> : <Circle size={24} />}
+          {completed ? <CheckCircle2 size={24} className="fill-green-500/10" /> : <Circle size={24} />}
         </button>
         <div className="flex-1 min-w-0">
           <h4 className={`text-base font-medium truncate transition-all ${completed ? 'line-through text-gray-500' : 'text-foreground'}`}>
@@ -58,7 +58,7 @@ export function DayView({ currentDate, activities, onToggleComplete }: DayViewPr
               </span>
             )}
             <span className={`text-[10px] uppercase tracking-[0.2em] font-semibold px-2 py-1 rounded-full ${completed ? 'bg-green-500/10 text-green-400 border border-green-500/20' : isOverdue ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 'bg-uzala-purple/10 text-uzala-purple border border-uzala-purple/20'}`}>
-              {act.estado.replace('_', ' ')}
+              {completed ? 'Completado' : act.estado.replace('_', ' ')}
             </span>
           </div>
         </div>

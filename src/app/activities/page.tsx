@@ -30,12 +30,25 @@ export default function ActivitiesPage() {
   const sectionData = useMemo(() => {
     return SECTIONS.map((section) => {
       const list = getActivitiesByStatus(statusKeyMap[section.key]);
-      const filtered = searchQuery
-        ? list.filter((activity) => activity.titulo.toLowerCase().includes(searchQuery.toLowerCase()))
-        : list;
+      const filtered = list.filter((activity) => {
+        // Ocultar completadas de las secciones principales
+        if (activity.estado === 'completado') return false;
+        
+        if (searchQuery) {
+          return activity.titulo.toLowerCase().includes(searchQuery.toLowerCase());
+        }
+        return true;
+      });
       return { ...section, activities: filtered };
     });
-  }, [getActivitiesByStatus, searchQuery]);
+  }, [getActivitiesByStatus, searchQuery, activities]);
+
+  const historyData = useMemo(() => {
+    const list = getActivitiesByStatus('completado');
+    return searchQuery
+      ? list.filter((activity) => activity.titulo.toLowerCase().includes(searchQuery.toLowerCase()))
+      : list;
+  }, [getActivitiesByStatus, searchQuery, activities]);
 
   const handleSaveActivity = (data: Omit<Activity, 'id' | 'fechaCreacion' | 'estado' | 'fechaCompletado'>) => {
     if (editingActivity) {
@@ -64,7 +77,7 @@ export default function ActivitiesPage() {
           className="flex-shrink-0"
         >
           {isDone ? (
-            <CheckCircle2 size={22} className="text-uzala-purple" />
+            <CheckCircle2 size={22} className="text-green-500" />
           ) : (
             <Circle size={22} className="text-gray-500" />
           )}
@@ -78,9 +91,19 @@ export default function ActivitiesPage() {
           <p className={`text-sm font-medium truncate ${isDone ? 'text-gray-500 line-through' : 'text-white'}`}>
             {activity.titulo}
           </p>
-          <p className="text-xs text-gray-400 mt-1">
-            {activity.fechaProgramada ?? 'Sin fecha'}
-          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-[10px] text-gray-500">
+              {activity.fechaProgramada ?? 'Sin fecha'}
+            </p>
+            {isDone && activity.fechaCompletado && (
+              <>
+                <span className="w-1 h-1 rounded-full bg-gray-600" />
+                <p className="text-[10px] text-green-500/70">
+                  Completado: {new Date(activity.fechaCompletado).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                </p>
+              </>
+            )}
+          </div>
         </button>
 
         <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${priority.bg} ${priority.text}`}>
@@ -116,7 +139,7 @@ export default function ActivitiesPage() {
         />
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-8 pb-10">
         {sectionData.map((section) => (
           <section key={section.key} className="space-y-4">
             <div className="flex items-center justify-between gap-4">
@@ -133,12 +156,32 @@ export default function ActivitiesPage() {
                 </AnimatePresence>
               ) : (
                 <div className="rounded-3xl border border-uzala-border bg-uzala-card p-6 text-center text-sm text-gray-500">
-                  No hay actividades en esta sección.
+                  No hay actividades pendientes en esta sección.
                 </div>
               )}
             </div>
           </section>
         ))}
+
+        {/* Sección Historial */}
+        <section className="space-y-4 pt-4 border-t border-uzala-border/50">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gray-400">Historial</p>
+            <p className="text-xs text-gray-500 mt-1">{historyData.length} actividades completadas</p>
+          </div>
+
+          <div className="space-y-3">
+            {historyData.length > 0 ? (
+              <AnimatePresence mode="popLayout">
+                {historyData.map(renderActivityItem)}
+              </AnimatePresence>
+            ) : (
+              <div className="rounded-3xl border border-dotted border-uzala-border bg-transparent p-6 text-center text-sm text-gray-500">
+                El historial aparecerá aquí cuando completes actividades.
+              </div>
+            )}
+          </div>
+        </section>
       </div>
 
       <ActivityModal

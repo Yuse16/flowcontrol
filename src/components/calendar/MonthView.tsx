@@ -69,7 +69,7 @@ export function MonthView({ currentDate, activities, onDayClick, onTaskClick, on
                   {date.getDate()}
                 </span>
                 {dayTasks.length > 0 && !isToday && (
-                  <div className="w-1 h-1 rounded-full bg-uzala-purple/30 mt-2.5" />
+                  <div className={`w-1 h-1 rounded-full mt-2.5 ${dayTasks.every(t => t.estado === 'completado') ? 'bg-green-500' : 'bg-uzala-purple/30'}`} />
                 )}
               </div>
 
