@@ -1,8 +1,8 @@
 import { getWeekDays, isSameDay } from '@/utils/date';
-import { CalendarTask } from '@/types/calendar';
+import { Activity } from '@/types/activity';
 import { TaskBadge } from './TaskBadge';
 
-export function WeekView({ currentDate, tasks, onDayClick, onTaskClick }: { currentDate: Date, tasks: CalendarTask[], onDayClick: (d: Date) => void, onTaskClick: (t: CalendarTask) => void }) {
+export function WeekView({ currentDate, activities, onDayClick, onTaskClick }: { currentDate: Date, activities: Activity[], onDayClick: (d: Date) => void, onTaskClick: (t: Activity) => void }) {
   const weekDays = getWeekDays(currentDate);
   const today = new Date();
   today.setHours(0,0,0,0);
@@ -10,7 +10,7 @@ export function WeekView({ currentDate, tasks, onDayClick, onTaskClick }: { curr
   const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
   return (
-    <div className="flex-1 bg-white dark:bg-[#171717] rounded-[32px] flex flex-col border border-border shadow-sm overflow-hidden" data-design-id="week-view-container">
+    <div className="flex-1 bg-white dark:bg-[#171717] rounded-[32px] flex flex-col border border-border shadow-sm overflow-hidden h-full max-h-[calc(100vh-16rem)] md:max-h-none" data-design-id="week-view-container">
       <div className="grid grid-cols-7 border-b border-border bg-gray-50/50 dark:bg-white/[0.02]">
         {weekDays.map((date, i) => {
           const isToday = isSameDay(date, new Date());
@@ -24,27 +24,27 @@ export function WeekView({ currentDate, tasks, onDayClick, onTaskClick }: { curr
           );
         })}
       </div>
-      <div className="grid grid-cols-7 flex-1 min-h-[500px]">
+      <div className="grid grid-cols-7 flex-1 min-h-[400px] md:min-h-[500px] overflow-y-auto">
         {weekDays.map((date, i) => {
           const year = date.getFullYear();
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const day = String(date.getDate()).padStart(2, '0');
           const dateStr = `${year}-${month}-${day}`;
           
-          const dayTasks = tasks.filter(t => t.date === dateStr);
+          const dayTasks = activities.filter(task => task.fechaProgramada === dateStr);
 
           return (
             <div 
               key={i} 
               onClick={() => onDayClick(date)}
-              className="border-r border-[#f3f4f6] dark:border-[#1f1f1f] p-4 flex flex-col gap-3 hover:bg-gray-50/50 dark:hover:bg-white/[0.01] cursor-pointer transition-all last:border-r-0"
+              className="border-r border-[#f3f4f6] dark:border-[#1f1f1f] p-4 flex flex-col gap-3 hover:bg-gray-50/50 dark:hover:bg-white/[0.01] cursor-pointer transition-all last:border-r-0 min-h-[120px]"
             >
               {dayTasks.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center opacity-10">
                    <div className="w-1 h-1 rounded-full bg-gray-400" />
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2 overflow-y-auto max-h-44 custom-scrollbar">
                   {dayTasks.map(t => (
                     <TaskBadge key={t.id} task={t} onClick={() => onTaskClick(t)} />
                   ))}

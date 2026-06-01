@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarTask } from '@/types/calendar';
+import { Activity } from '@/types/activity';
 import { PriorityLevel } from '@/types/common';
 import { formatDateString } from '@/utils/date';
 import { X, Trash2 } from 'lucide-react';
@@ -12,7 +12,7 @@ interface TaskModalProps {
   onDelete?: () => void;
   onMove?: (newDate: string) => void;
   onToggleStatus?: () => void;
-  initialData?: CalendarTask | null;
+  initialData?: Activity | null;
   selectedDate: Date;
 }
 
@@ -27,10 +27,10 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
     if (!isOpen) return;
     setShowDatePicker(false);
     if (initialData) {
-      setTitle(initialData.title);
-      setDescription(initialData.description || '');
+      setTitle(initialData.titulo || initialData.title || '');
+      setDescription(initialData.descripcion || initialData.description || '');
       setPriority(initialData.priority);
-      setMoveDate(initialData.date);
+      setMoveDate(initialData.fechaProgramada || formatDateString(selectedDate));
     } else {
       setTitle('');
       setDescription('');
@@ -97,12 +97,12 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
                     type="button" 
                     onClick={onToggleStatus}
                     className={`flex-1 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                      initialData.completed 
+                      initialData.estado === 'completado'
                         ? 'bg-green-500/20 text-green-500 border border-green-500/30' 
                         : 'bg-gray-500/10 text-gray-500 border border-gray-500/20 hover:bg-green-500/20 hover:text-green-500 hover:border-green-500/30'
                     }`}
                   >
-                    {initialData.completed ? '✓ COMPLETADA' : 'MARCAR COMO LISTO'}
+                    {initialData.estado === 'completado' ? '✓ COMPLETADA' : 'MARCAR COMO LISTO'}
                   </button>
                   
                   <button 

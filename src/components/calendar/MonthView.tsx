@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { generateCalendarGrid, isSameDay } from '@/utils/date';
-import { CalendarTask } from '@/types/calendar';
+import { Activity } from '@/types/activity';
 import { TaskBadge } from './TaskBadge';
 
-export function MonthView({ currentDate, tasks, onDayClick, onTaskClick, onMoveTask }: { currentDate: Date, tasks: CalendarTask[], onDayClick: (d: Date) => void, onTaskClick: (t: CalendarTask) => void, onMoveTask: (id: string, date: string) => void }) {
+export function MonthView({ currentDate, activities, onDayClick, onTaskClick, onMoveTask }: { currentDate: Date, activities: Activity[], onDayClick: (d: Date) => void, onTaskClick: (t: Activity) => void, onMoveTask: (id: string, date: string) => void }) {
   const grid = generateCalendarGrid(currentDate.getFullYear(), currentDate.getMonth());
   const today = new Date();
   today.setHours(0,0,0,0);
@@ -26,7 +26,7 @@ export function MonthView({ currentDate, tasks, onDayClick, onTaskClick, onMoveT
   };
 
   return (
-    <div className="flex-1 bg-white dark:bg-[#171717] rounded-2xl flex flex-col border border-gray-100 dark:border-[#1f1f1f] shadow-sm overflow-hidden" data-design-id="month-view-container">
+    <div className="flex-1 bg-white dark:bg-[#171717] rounded-2xl flex flex-col border border-gray-100 dark:border-[#1f1f1f] shadow-sm overflow-hidden h-full max-h-[calc(100vh-16rem)] md:max-h-none" data-design-id="month-view-container">
       {/* Days of Week Header - Smaller */}
       <div className="grid grid-cols-7 border-b border-gray-50 dark:border-[#1f1f1f] bg-gray-50/30 dark:bg-white/[0.01]">
         {daysOfWeek.map(d => (
@@ -35,7 +35,7 @@ export function MonthView({ currentDate, tasks, onDayClick, onTaskClick, onMoveT
       </div>
 
       {/* Calendar Grid - More Compact */}
-      <div className="grid grid-cols-7 flex-1 min-h-[500px]">
+      <div className="grid grid-cols-7 flex-1 min-h-[400px] md:min-h-[500px] overflow-y-auto">
         {grid.map((date, i) => {
           const isCurrentMonth = date.getMonth() === currentDate.getMonth();
           const isToday = isSameDay(date, new Date());
@@ -45,7 +45,7 @@ export function MonthView({ currentDate, tasks, onDayClick, onTaskClick, onMoveT
           const day = String(date.getDate()).padStart(2, '0');
           const dateStr = `${year}-${month}-${day}`;
           
-          const dayTasks = tasks.filter(t => t.date === dateStr);
+          const dayTasks = activities.filter(t => t.fechaProgramada === dateStr);
           const isDraggingOver = dragOverDate === dateStr;
 
           return (
@@ -57,7 +57,7 @@ export function MonthView({ currentDate, tasks, onDayClick, onTaskClick, onMoveT
               onDrop={(e) => handleDrop(e, dateStr)}
               className={`
                 relative border-r border-b border-gray-50 dark:border-[#1f1f1f] p-2 flex flex-col gap-1 
-                transition-all hover:bg-gray-50/50 dark:hover:bg-white/[0.01] cursor-pointer min-h-[100px]
+                transition-all hover:bg-gray-50/50 dark:hover:bg-white/[0.01] cursor-pointer min-h-[70px] md:min-h-[100px]
                 ${!isCurrentMonth ? 'bg-gray-50/20 dark:bg-black/10' : ''} 
                 ${isDraggingOver ? 'bg-primary/5 ring-2 ring-inset ring-primary/10' : ''}
               `}
@@ -75,7 +75,7 @@ export function MonthView({ currentDate, tasks, onDayClick, onTaskClick, onMoveT
                 )}
               </div>
 
-              <div className="flex-1 overflow-y-auto space-y-1 pr-0.5 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto max-h-28 space-y-1 pr-0.5 custom-scrollbar">
                 {dayTasks.map(t => (
                   <TaskBadge key={t.id} task={t} onClick={() => onTaskClick(t)} />
                 ))}

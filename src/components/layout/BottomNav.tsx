@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Home, Calendar, Plus, Activity, MoreHorizontal } from 'lucide-react';
 import clsx from 'clsx';
 import { useNavigation } from '@/context/NavigationContext';
-import { useReminders } from '@/hooks/useReminders';
+import { useQuickAdd } from '@/context/QuickAddContext';
 
 const navItems = [
   { icon: Home, label: 'Inicio', href: '/dashboard' },
@@ -17,7 +17,7 @@ const navItems = [
 export function BottomNav() {
   const pathname = usePathname();
   const { setIsMobileMenuOpen } = useNavigation();
-  const { setModalOpen } = useReminders();
+  const { openMenu } = useQuickAdd();
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0F0F17]/95 backdrop-blur-xl border-t border-[#2A2A3C] safe-bottom">
@@ -27,7 +27,7 @@ export function BottomNav() {
             return (
               <button
                 key="add"
-                onClick={() => setModalOpen(true)}
+                onClick={() => openMenu()}
                 className="flex flex-col items-center -mt-5"
               >
                 <div className="w-14 h-14 uzala-gradient rounded-full flex items-center justify-center shadow-uzala-lg">

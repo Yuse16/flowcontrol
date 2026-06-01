@@ -3,25 +3,27 @@ import { PriorityLevel } from './common';
 export type ActivityType = 'recurrent' | 'variable';
 export type RecurrencePattern = 'daily' | 'weekdays' | 'weekends' | 'custom';
 export type ActivityModule = 'proveedores' | 'surtir' | 'urgentes' | 'vencidos' | 'general';
+export type ActivityStatus = 'pendiente' | 'en_proceso' | 'completado' | 'vencido';
+export type ActivityOrigin = 'actividades' | 'calendario' | 'nota' | 'surtir' | 'proveedor';
 
 export interface Activity {
   id: string;
-  title: string;
-  type: ActivityType;
-  module: ActivityModule;
+  titulo: string;
+  descripcion?: string;
+  fechaProgramada?: string; // YYYY-MM-DD
   priority: PriorityLevel;
-  category?: string;
-  time?: string;
-  
-  // Para recurrentes
+  estado: ActivityStatus;
+  fechaCreacion: string; // ISO
+  fechaCompletado?: string; // ISO
+  origen: ActivityOrigin;
+
+  // Compatibility aliases for legacy rendering
+  title?: string;
+  description?: string;
+
+  // Legacy / compatibility fields
+  type?: ActivityType;
+  module?: ActivityModule;
   recurrence?: RecurrencePattern;
   customDays?: number[]; // 0=Sunday, 1=Monday... 6=Saturday
-  
-  // Para variables
-  createdAt: string; // ISO
-  isCompleted: boolean; // Para variables es global
-  
-  // Para recurrentes: Historial de completado por fecha "YYYY-MM-DD"
-  // Para variables: No se usa, se usa isCompleted
-  completionHistory?: Record<string, boolean>; 
 }

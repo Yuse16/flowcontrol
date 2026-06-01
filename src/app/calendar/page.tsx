@@ -1,28 +1,41 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { useQuickAdd } from '@/context/QuickAddContext';
 import { CalendarHeader } from '@/components/calendar/CalendarHeader';
 import { MonthView } from '@/components/calendar/MonthView';
 import { WeekView } from '@/components/calendar/WeekView';
 import { DayView } from '@/components/calendar/DayView';
 import { TaskModal } from '@/components/calendar/TaskModal';
-import { useCalendarTasks } from '@/hooks/useCalendarTasks';
 import { useAdvancedActivities } from '@/hooks/useAdvancedActivities';
-import { CalendarViewType, CalendarTask } from '@/types/calendar';
+import { CalendarViewType } from '@/types/calendar';
 import { PriorityLevel } from '@/types/common';
+import { Activity } from '@/types/activity';
 import { formatDateString } from '@/utils/date';
 
 export default function CalendarPage() {
+  const pathname = usePathname();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewType, setViewType] = useState<CalendarViewType>('month');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<CalendarTask | null>(null);
+  const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const { tasks, addTask, updateTask, deleteTask, toggleTaskStatus, moveTask, isLoaded } = useCalendarTasks();
-  const { getActivitiesForDate, toggleCompletion: toggleAdvancedCompletion } = useAdvancedActivities();
+  const { activities, addActivity, updateActivity, deleteActivity, toggleCompletion, getCalendarActivitiesForDate, isLoaded } = useAdvancedActivities();
+  const { openMenu } = useQuickAdd();
 
-  const advancedActivitiesForDay = getActivitiesForDate(currentDate);
-  const calendarTasksForDay = tasks.filter(t => t.date === formatDateString(currentDate));
+  useEffect(() => {
+    if (pathname === '/calendar') {
+      setViewType('month');
+    }
+  }, [pathname]);
+
+  const activitiesForDay = getCalendarActivitiesForDate(currentDate);
+  const scheduledActivities = activities.filter(a => a.fechaProgramada);
+
+  const handleOpenQuickAdd = () => {
+    openMenu({ origen: 'calendario', fechaProgramada: formatDateString(currentDate) });
+  };
 
   const handlePrev = () => {
     const newDate = new Date(currentDate);
@@ -49,38 +62,44 @@ export default function CalendarPage() {
     setViewType('day');
   };
 
-  const handleTaskClick = (task: CalendarTask) => {
-    setEditingTask(task);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenNewTaskModal = () => {
-    setEditingTask(null);
-    setSelectedDate(currentDate);
+  const handleTaskClick = (activity: Activity) => {
+    setEditingActivity(activity);
     setIsModalOpen(true);
   };
 
   const handleSaveTask = (title: string, priority: PriorityLevel, description: string) => {
     const dateStr = formatDateString(selectedDate);
-    if (editingTask) {
-      updateTask(editingTask.id, { title, priority, description });
+    if (editingActivity) {
+      updateActivity(editingActivity.id, { titulo: title, description, title, priority, descripcion: description });
     } else {
-      addTask({ title, date: dateStr, priority, description, completed: false });
+      addActivity({
+        titulo: title,
+        descripcion: description,
+        title,
+        description,
+        fechaProgramada: dateStr,
+        priority,
+        origen: 'calendario',
+      });
     }
   };
 
   const handleDeleteTask = () => {
-    if (editingTask) {
-      deleteTask(editingTask.id);
+    if (editingActivity) {
+      deleteActivity(editingActivity.id);
     }
   };
 
+  const handleMoveActivity = (id: string, newDate: string) => {
+    updateActivity(id, { fechaProgramada: newDate, origen: 'calendario' });
+  };
+
   if (!isLoaded) {
-    return <div className="h-full flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div></div>;
+    return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div></div>;
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col max-w-lg md:max-w-[1600px] mx-auto w-full pb-4">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-screen flex flex-col max-w-full md:max-w-[1600px] mx-auto w-full pb-4">
       <header className="mb-4 md:hidden">
         <h1 className="text-2xl font-bold text-white">Calendario</h1>
       </header>
@@ -91,23 +110,23 @@ export default function CalendarPage() {
         onPrev={handlePrev}
         onNext={handleNext}
         onToday={handleToday}
-        onAddTask={handleOpenNewTaskModal}
+        onAddTask={handleOpenQuickAdd}
       />
 
       {viewType === 'month' && (
         <MonthView 
           currentDate={currentDate} 
-          tasks={tasks} 
+          activities={scheduledActivities} 
           onDayClick={handleDayClick} 
           onTaskClick={handleTaskClick} 
-          onMoveTask={moveTask}
+          onMoveTask={handleMoveActivity}
         />
       )}
       
       {viewType === 'week' && (
         <WeekView 
           currentDate={currentDate} 
-          tasks={tasks} 
+          activities={scheduledActivities} 
           onDayClick={handleDayClick} 
           onTaskClick={handleTaskClick} 
         />
@@ -116,26 +135,23 @@ export default function CalendarPage() {
       {viewType === 'day' && (
         <DayView 
           currentDate={currentDate} 
-          activities={advancedActivitiesForDay}
-          calendarTasks={calendarTasksForDay}
-          onToggleComplete={toggleAdvancedCompletion}
-          onToggleCalendarTask={toggleTaskStatus}
-          onCalendarTaskClick={handleTaskClick}
+          activities={activitiesForDay}
+          onToggleComplete={toggleCompletion}
         />
       )}
 
       <TaskModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialData={editingTask}
+        initialData={editingActivity}
         selectedDate={selectedDate}
         onSave={handleSaveTask}
         onDelete={handleDeleteTask}
-        onMove={(newDate) => editingTask && moveTask(editingTask.id, newDate)}
+        onMove={(newDate) => editingActivity && handleMoveActivity(editingActivity.id, newDate)}
         onToggleStatus={() => {
-          if (editingTask) {
-            toggleTaskStatus(editingTask.id);
-            setEditingTask(prev => prev ? { ...prev, completed: !prev.completed } : null);
+          if (editingActivity) {
+            toggleCompletion(editingActivity.id);
+            setEditingActivity(prev => prev ? { ...prev, estado: prev.estado === 'completado' ? 'pendiente' : 'completado' } : null);
           }
         }}
       />
