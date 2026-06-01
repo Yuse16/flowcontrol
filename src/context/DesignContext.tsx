@@ -46,6 +46,9 @@ const defaultSettings: DesignSettings = {
   overrides: {},
 };
 
+const STORAGE_KEY = 'uzala-granular-design';
+const LEGACY_STORAGE_KEY = 'flowcontrol-granular-design';
+
 const DesignContext = createContext<DesignContextType | undefined>(undefined);
 
 export function DesignProvider({ children }: { children: React.ReactNode }) {
@@ -53,7 +56,7 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('flowcontrol-granular-design');
+    const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
     if (saved) {
       try {
         setSettings(JSON.parse(saved));
@@ -73,7 +76,7 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
     root.style.setProperty('--font-family-base', settings.global.fontFamily);
     if (settings.global.background) root.style.setProperty('--bg-custom', settings.global.background);
 
-    localStorage.setItem('flowcontrol-granular-design', JSON.stringify(settings));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   }, [settings]);
 
   const updateGlobalSettings = (newSettings: Partial<DesignSettings['global']>) => {
@@ -95,7 +98,8 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
 
   const resetSettings = () => {
     setSettings(defaultSettings);
-    localStorage.removeItem('flowcontrol-granular-design');
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
   };
 
   // Generate CSS for granular overrides

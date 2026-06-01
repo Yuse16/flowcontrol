@@ -14,9 +14,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('dark');
   const [mounted, setMounted] = useState(false);
 
+  const STORAGE_KEY = 'uzala-theme';
+  const LEGACY_STORAGE_KEY = 'flowcontrol-theme';
+
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem('flowcontrol-theme') as Theme;
+    const savedTheme = (localStorage.getItem(STORAGE_KEY) as Theme) || (localStorage.getItem(LEGACY_STORAGE_KEY) as Theme);
     if (savedTheme) {
       setThemeState(savedTheme);
     }
@@ -32,7 +35,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.classList.remove('dark');
       root.classList.add('light');
     }
-    localStorage.setItem('flowcontrol-theme', theme);
+    localStorage.setItem(STORAGE_KEY, theme);
   }, [theme, mounted]);
 
   const setTheme = (newTheme: Theme) => {

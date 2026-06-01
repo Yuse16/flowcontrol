@@ -1,18 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { useRoutes } from '@/hooks/useRoutes';
-import { OperationalRoute } from '@/types/route';
-import { 
-  Map, 
-  Search, 
-  Plus, 
-  ChevronRight, 
-  X, 
-  Trash2, 
-  Bookmark,
-  ExternalLink,
-  BookOpen
-} from 'lucide-react';
+import { Search, Plus, ChevronRight, X, Trash2, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function RoutesPage() {
@@ -45,7 +34,7 @@ export default function RoutesPage() {
   };
 
   if (!isLoaded) {
-    return <div className="h-full flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div></div>;
+    return <div className="h-full flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-uzala-purple border-t-transparent animate-spin"></div></div>;
   }
 
   return (
@@ -53,13 +42,13 @@ export default function RoutesPage() {
       {/* Header - Minimalist */}
       <div className="flex justify-between items-end mb-8">
         <div className="space-y-1">
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#6366f1]">Biblioteca</p>
-          <h1 className="text-3xl font-bold text-[#111827] dark:text-white tracking-tight">Rutas Operativas</h1>
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-uzala-purple">Biblioteca</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Rutas Operativas</h1>
           <p className="text-[13px] text-gray-400 font-medium">Flujos de navegación para Intelisis y otros sistemas.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-[#6366f1] text-white px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all shadow-sm shadow-[#6366f1]/20 hover:scale-105"
+          className="flex items-center gap-2 bg-uzala-purple text-white px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all shadow-lg shadow-uzala-purple/20 hover:bg-uzala-purple/90"
         >
           <Plus size={16} strokeWidth={3} />
           <span>Nueva Ruta</span>
@@ -68,13 +57,13 @@ export default function RoutesPage() {
 
       {/* Search Bar - Minimalist */}
       <div className="relative w-full max-w-2xl group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
         <input 
           type="text"
           placeholder="Buscar rutas..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-12 pr-6 py-2.5 bg-white dark:bg-[#171717] border border-[#f3f4f6] dark:border-[#262626] rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-[#6366f1]/5 transition-all shadow-sm"
+          className="w-full pl-12 pr-6 py-2.5 bg-uzala-card border border-uzala-border rounded-xl text-[13px] text-white focus:outline-none focus:ring-2 focus:ring-uzala-purple/30 transition-all shadow-sm"
         />
       </div>
 
@@ -88,16 +77,16 @@ export default function RoutesPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="bg-white dark:bg-[#171717] p-5 rounded-2xl border border-gray-100 dark:border-[#1f1f1f] shadow-sm hover:shadow-md transition-all group"
+              className="bg-uzala-card p-5 rounded-2xl border border-uzala-border shadow-2xl hover:shadow-uzala-purple/10 transition-all group"
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-[8px] uppercase font-bold tracking-widest text-[#6366f1] px-1.5 py-0.5 bg-[#6366f1]/5 rounded border border-[#6366f1]/10">
+                    <span className="text-[8px] uppercase font-bold tracking-widest text-uzala-purple px-1.5 py-0.5 bg-uzala-purple/10 rounded border border-uzala-purple/15">
                       {route.category}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-[#111827] dark:text-white group-hover:text-[#6366f1] transition-colors">{route.title}</h3>
+                  <h3 className="text-base font-bold text-white group-hover:text-uzala-purple transition-colors">{route.title}</h3>
                   <p className="text-[12px] text-gray-400 mt-1 line-clamp-1">{route.description}</p>
                 </div>
                 <button 
@@ -162,7 +151,7 @@ export default function RoutesPage() {
                     placeholder="Ej: Ver días de entrega"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-all"
+                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-uzala-purple transition-all"
                   />
                 </div>
 
@@ -173,7 +162,7 @@ export default function RoutesPage() {
                     placeholder="¿Para qué sirve esta ruta?"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-all resize-none"
+                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-uzala-purple transition-all resize-none"
                   />
                 </div>
 
@@ -183,7 +172,7 @@ export default function RoutesPage() {
                     <select 
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary transition-all appearance-none"
+                      className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-uzala-purple transition-all appearance-none"
                     >
                       <option value="Intelisis">Intelisis</option>
                       <option value="Excel">Excel</option>
@@ -202,7 +191,7 @@ export default function RoutesPage() {
                     placeholder="Ej: Reportes > Otros > Operación"
                     value={stepsInput}
                     onChange={(e) => setStepsInput(e.target.value)}
-                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-mono text-sm focus:outline-none focus:border-primary transition-all"
+                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-mono text-sm focus:outline-none focus:border-uzala-purple transition-all"
                   />
                   <p className="text-[10px] text-gray-500 mt-2">Puedes usar &quot;&gt;&quot;, coma o barra para separar los pasos.</p>
                 </div>
@@ -217,7 +206,7 @@ export default function RoutesPage() {
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-bold transition-all shadow-lg shadow-primary/20"
+                    className="flex-1 px-6 py-3 bg-uzala-purple hover:bg-uzala-purple/90 text-white rounded-xl font-bold transition-all shadow-lg shadow-uzala-purple/20"
                   >
                     Guardar Ruta
                   </button>
