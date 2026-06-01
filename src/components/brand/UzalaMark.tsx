@@ -8,7 +8,7 @@ interface UzalaMarkProps {
 
 export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkProps) {
   const uid = `mark-${size}`;
-  const { squircle, uBody, uTick, uCap, glow, strokeWidth } = UZALA_MARK;
+  const { squircle, fStem, fTop, fMid, cCurve, glow, strokeWidth } = UZALA_MARK;
 
   return (
     <svg
@@ -68,31 +68,35 @@ export function UzalaMark({ size = 48, className, showGlow = true }: UzalaMarkPr
         />
       )}
 
-      {/* Detached vertical cap (right arm top piece) */}
-      <rect
-        x={uCap.x}
-        y={uCap.y}
-        width={uCap.w}
-        height={uCap.h}
-        rx={uCap.rx}
-        fill={`url(#${uid}-grad)`}
-        filter={showGlow ? `url(#${uid}-blur)` : undefined}
-      />
-
-      {/* Main U body */}
+      {/* F stem and bars */}
       <path
-        d={uBody}
+        d={fStem}
         stroke={`url(#${uid}-grad)`}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
-        strokeLinejoin="round"
+        fill="none"
+        filter={showGlow ? `url(#${uid}-blur)` : undefined}
+      />
+      <path
+        d={fTop}
+        stroke={`url(#${uid}-grad)`}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        fill="none"
+        filter={showGlow ? `url(#${uid}-blur)` : undefined}
+      />
+      <path
+        d={fMid}
+        stroke={`url(#${uid}-grad)`}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
         fill="none"
         filter={showGlow ? `url(#${uid}-blur)` : undefined}
       />
 
-      {/* Diagonal tick */}
+      {/* C curve */}
       <path
-        d={uTick}
+        d={cCurve}
         stroke={`url(#${uid}-grad)`}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
