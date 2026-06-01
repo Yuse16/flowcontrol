@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useQuickAdd } from '@/context/QuickAddContext';
 import { CalendarHeader } from '@/components/calendar/CalendarHeader';
 import { MonthView } from '@/components/calendar/MonthView';
@@ -23,12 +23,28 @@ export default function CalendarPage() {
 
   const { activities, addActivity, updateActivity, deleteActivity, toggleCompletion, getCalendarActivitiesForDate, isLoaded } = useAdvancedActivities();
   const { openMenu } = useQuickAdd();
+  const router = useRouter();
 
   useEffect(() => {
     if (pathname === '/calendar') {
       setViewType('month');
     }
   }, [pathname]);
+
+  useEffect(() => {
+    const handleCalendarNavClick = () => {
+      if (viewType === 'day' || viewType === 'week') {
+        setViewType('month');
+        return;
+      }
+      if (viewType === 'month') {
+        router.push('/dashboard');
+      }
+    };
+
+    window.addEventListener('calendar-nav-click', handleCalendarNavClick);
+    return () => window.removeEventListener('calendar-nav-click', handleCalendarNavClick);
+  }, [viewType, router]);
 
   const activitiesForDay = getCalendarActivitiesForDate(currentDate);
   const scheduledActivities = activities.filter(a => a.fechaProgramada);

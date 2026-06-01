@@ -60,17 +60,23 @@ export function UzalaWordmark({ size = 'md', className }: UzalaWordmarkProps) {
         strokeLinejoin="round"
       />
 
-      {/* First A — gradient left half, white right leg, cyan dot, no crossbar */}
+      {/* First A — gradient fill with clear crossbar for correct UZALA rendering */}
       <path
-        d={`M ${a1cx - a1w} ${a1base} L ${a1cx} ${a1top} L ${a1cx} ${a1base} Z`}
+        d={`M ${a1cx - a1w} ${a1base} L ${a1cx} ${a1top} L ${a1cx + a1w} ${a1base} Z`}
         fill={`url(#${uid}-aGrad)`}
       />
       <path
-        d={`M ${a1cx} ${a1top} L ${a1cx + a1w} ${a1base}`}
+        d={`M ${a1cx - a1w} ${a1base} L ${a1cx} ${a1top} L ${a1cx + a1w} ${a1base}`}
         stroke={UZALA_COLORS.white}
         strokeWidth={sw}
         strokeLinecap="round"
         strokeLinejoin="round"
+      />
+      <path
+        d={`M ${a1cx - a1w + 4} ${a1base - 18} H ${a1cx + a1w - 4}`}
+        stroke={UZALA_COLORS.white}
+        strokeWidth={sw}
+        strokeLinecap="round"
       />
       <circle cx={a1cx} cy={34} r={3.2} fill={UZALA_COLORS.cyan} />
 
@@ -83,13 +89,19 @@ export function UzalaWordmark({ size = 'md', className }: UzalaWordmarkProps) {
         strokeLinejoin="round"
       />
 
-      {/* Final A — open white V, no crossbar, no dot */}
+      {/* Final A — open white V with crossbar for a clear A shape */}
       <path
         d="M 204 45 L 218 7 L 232 45"
         stroke={UZALA_COLORS.white}
         strokeWidth={sw}
         strokeLinecap="round"
         strokeLinejoin="round"
+      />
+      <path
+        d="M 209 28 H 227"
+        stroke={UZALA_COLORS.white}
+        strokeWidth={sw}
+        strokeLinecap="round"
       />
     </svg>
   );

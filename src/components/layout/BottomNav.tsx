@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Home, Calendar, Plus, Activity, MoreHorizontal } from 'lucide-react';
 import clsx from 'clsx';
 import { useNavigation } from '@/context/NavigationContext';
@@ -16,8 +16,18 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const { setIsMobileMenuOpen } = useNavigation();
   const { openMenu } = useQuickAdd();
+
+  const handleActiveNavClick = (href: string | null) => {
+    if (!href) return;
+    if (href === '/calendar' && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('calendar-nav-click'));
+      return;
+    }
+    router.push(href);
+  };
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0F0F17]/95 backdrop-blur-xl border-t border-[#2A2A3C] safe-bottom">
@@ -55,6 +65,34 @@ export function BottomNav() {
           }
 
           const isActive = pathname === item.href;
+
+          if (pathname === item.href) {
+            return (
+              <button
+                key={item.href!}
+                type="button"
+                onClick={() => handleActiveNavClick(item.href)}
+                className="flex flex-col items-center gap-1 px-3 py-1"
+              >
+                <item.icon
+                  size={22}
+                  className={clsx(
+                    'transition-colors',
+                    isActive ? 'text-uzala-purple' : 'text-gray-500'
+                  )}
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
+                <span
+                  className={clsx(
+                    'text-[10px] font-semibold transition-colors',
+                    isActive ? 'text-uzala-purple' : 'text-gray-500'
+                  )}
+                >
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
 
           return (
             <Link

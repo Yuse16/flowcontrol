@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    min-height: 100%;
+  }
+
   :root {
     --background: var(--bg-custom, #05000A);
     --foreground: #f1f5f9;

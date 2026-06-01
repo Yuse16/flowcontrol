@@ -80,7 +80,7 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
               </button>
             </div>
 
-            <div className="grid gap-4 p-6 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3 max-h-[calc(100vh-20vh)] overflow-y-auto">
               {options.map((option) => {
                 const Icon = option.icon;
                 return (
@@ -88,16 +88,16 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
                     key={option.key}
                     type="button"
                     onClick={() => onSelect(option.key)}
-                    className={`group rounded-3xl border border-white/10 bg-gradient-to-br ${option.accent} p-6 text-left shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-uzala-purple/40`}
+                    className={`group rounded-3xl border border-white/10 bg-gradient-to-br ${option.accent} p-4 text-left shadow-xl shadow-black/20 transition hover:-translate-y-0.5 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-uzala-purple/40`}
                   >
-                    <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-white/10 text-white mb-4 shadow-inner">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-white/10 text-white mb-3 shadow-inner">
                       <Icon size={24} />
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-white">{option.label}</h3>
                       <p className="mt-2 text-sm leading-6 text-white/70">{option.description}</p>
                     </div>
-                    <span className="mt-6 inline-flex items-center text-sm font-semibold text-white/75 group-hover:text-white">
+                    <span className="mt-4 inline-flex items-center text-xs font-semibold text-white/80 group-hover:text-white">
                       Crear ahora
                     </span>
                   </button>
