@@ -69,7 +69,7 @@ export default function DashboardPage() {
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-semibold italic text-white tracking-tight">
               {getGreeting()}, {currentUser.name.split(' ')[0]} 👋
             </h1>
             <p className="text-sm text-gray-400 mt-1">Tienes {todayActivities.length} actividades para hoy</p>

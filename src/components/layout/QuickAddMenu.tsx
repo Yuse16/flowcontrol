@@ -70,17 +70,17 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
             className="w-full max-w-3xl rounded-[32px] border border-white/10 bg-[#0D0D16]/95 shadow-2xl shadow-black/50 overflow-hidden"
           >
-            <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+            <div className="flex items-center justify-between px-6 pt-6 pb-3 border-b border-white/10">
               <div>
                 <p className="text-xs uppercase tracking-[0.32em] text-gray-400">¿Qué quieres crear?</p>
-                <h2 className="mt-2 text-3xl font-black text-white">Nuevo elemento rápido</h2>
+                <h2 className="mt-3 text-2xl font-black text-white">Nuevo elemento rápido</h2>
               </div>
               <button onClick={onClose} className="rounded-2xl p-3 text-gray-400 hover:text-white bg-white/5 transition">
                 <X size={20} />
               </button>
             </div>
 
-            <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3 max-h-[calc(100vh-20vh)] overflow-y-auto">
+            <div className="grid gap-2 p-4 sm:grid-cols-3 lg:grid-cols-4 max-h-[calc(100vh-20vh)] overflow-y-auto">
               {options.map((option) => {
                 const Icon = option.icon;
                 return (
@@ -88,16 +88,16 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
                     key={option.key}
                     type="button"
                     onClick={() => onSelect(option.key)}
-                    className={`group rounded-3xl border border-white/10 bg-gradient-to-br ${option.accent} p-4 text-left shadow-xl shadow-black/20 transition hover:-translate-y-0.5 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-uzala-purple/40`}
+                    className={`group rounded-3xl border border-white/10 bg-gradient-to-br ${option.accent} p-3 text-left shadow-xl shadow-black/20 transition hover:-translate-y-0.5 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-uzala-purple/40`}
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-white/10 text-white mb-3 shadow-inner">
-                      <Icon size={24} />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-white mb-2 shadow-inner">
+                      <Icon size={20} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-white">{option.label}</h3>
-                      <p className="mt-2 text-sm leading-6 text-white/70">{option.description}</p>
+                      <h3 className="text-base font-bold text-white">{option.label}</h3>
+                      <p className="mt-1 text-xs leading-4 text-white/70">{option.description}</p>
                     </div>
-                    <span className="mt-4 inline-flex items-center text-xs font-semibold text-white/80 group-hover:text-white">
+                    <span className="mt-3 inline-flex items-center text-[11px] font-semibold text-white/80 group-hover:text-white">
                       Crear ahora
                     </span>
                   </button>
