@@ -1,49 +1,55 @@
 "use client";
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, CheckCircle2, ClipboardList, Bell, Package, Truck, FileText } from 'lucide-react';
+import { X, CheckCircle2, ClipboardList, Bell, Package, Truck, FileText, Plus } from 'lucide-react';
 
 const options = [
   {
     key: 'actividad',
     label: 'Actividad',
-    description: 'Tarea diaria o proyecto rápido.',
     icon: CheckCircle2,
-    accent: 'from-uzala-purple to-uzala-blue',
+    color: 'text-uzala-purple',
+    bg: 'bg-uzala-purple/10',
+    glow: 'shadow-uzala-purple/20',
   },
   {
     key: 'pendiente',
     label: 'Pendiente',
-    description: 'Anota algo urgente o rápido.',
     icon: ClipboardList,
-    accent: 'from-uzala-teal to-uzala-cyan',
+    color: 'text-uzala-teal',
+    bg: 'bg-uzala-teal/10',
+    glow: 'shadow-uzala-teal/20',
   },
   {
     key: 'recordatorio',
     label: 'Recordatorio',
-    description: 'Alerta temporal con seguimiento.',
     icon: Bell,
-    accent: 'from-uzala-orange to-uzala-red',
+    color: 'text-uzala-orange',
+    bg: 'bg-uzala-orange/10',
+    glow: 'shadow-uzala-orange/20',
   },
   {
     key: 'por_surtir',
     label: 'Por surtir',
-    description: 'Registra lo que necesitas surtir.',
     icon: Package,
-    accent: 'from-uzala-blue to-uzala-purple',
+    color: 'text-uzala-blue',
+    bg: 'bg-uzala-blue/10',
+    glow: 'shadow-uzala-blue/20',
   },
   {
     key: 'proveedor',
     label: 'Proveedor',
-    description: 'Nuevo proveedor o contacto de surtido.',
     icon: Truck,
-    accent: 'from-uzala-cyan to-uzala-teal',
+    color: 'text-uzala-cyan',
+    bg: 'bg-uzala-cyan/10',
+    glow: 'shadow-uzala-cyan/20',
   },
   {
     key: 'nota',
     label: 'Nota',
-    description: 'Guarda una referencia rápida.',
     icon: FileText,
-    accent: 'from-uzala-green to-uzala-teal',
+    color: 'text-green-400',
+    bg: 'bg-green-400/10',
+    glow: 'shadow-green-400/20',
   },
 ] as const;
 
@@ -57,55 +63,64 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[120] bg-black/65 backdrop-blur-xl flex items-center justify-center p-4"
-        >
+        <>
+          {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.96 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-            className="w-full max-w-3xl rounded-[32px] border border-white/10 bg-[#0D0D16]/95 shadow-2xl shadow-black/50 overflow-hidden"
-          >
-            <div className="flex items-center justify-between px-6 pt-6 pb-3 border-b border-white/10">
-              <div>
-                <p className="text-xs uppercase tracking-[0.32em] text-gray-400">¿Qué quieres crear?</p>
-                <h2 className="mt-3 text-2xl font-black text-white">Nuevo elemento rápido</h2>
-              </div>
-              <button onClick={onClose} className="rounded-2xl p-3 text-gray-400 hover:text-white bg-white/5 transition">
-                <X size={20} />
-              </button>
-            </div>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 z-[110] bg-black/40 backdrop-blur-md"
+          />
 
-            <div className="grid gap-2 p-4 sm:grid-cols-3 lg:grid-cols-4 max-h-[calc(100vh-20vh)] overflow-y-auto">
-              {options.map((option) => {
+          {/* Menu Container */}
+          <div className="fixed inset-x-0 bottom-24 z-[120] flex flex-col items-center justify-end px-6 pointer-events-none">
+            <div className="w-full max-w-xs flex flex-col gap-3 pointer-events-auto">
+              {options.map((option, idx) => {
                 const Icon = option.icon;
                 return (
-                  <button
+                  <motion.button
                     key={option.key}
-                    type="button"
+                    initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                    animate={{ 
+                      opacity: 1, 
+                      y: 0, 
+                      scale: 1,
+                      transition: { delay: (options.length - 1 - idx) * 0.05, type: 'spring', damping: 20 }
+                    }}
+                    exit={{ 
+                      opacity: 0, 
+                      y: 10, 
+                      scale: 0.9,
+                      transition: { delay: idx * 0.03 }
+                    }}
                     onClick={() => onSelect(option.key)}
-                    className={`group rounded-3xl border border-white/10 bg-gradient-to-br ${option.accent} p-3 text-left shadow-xl shadow-black/20 transition hover:-translate-y-0.5 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-uzala-purple/40`}
+                    className="flex items-center gap-4 p-2 pl-3 rounded-[24px] glass-card border-white/10 shadow-xl group active:scale-95 transition-all"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-white mb-2 shadow-inner">
-                      <Icon size={20} />
+                    <div className={`w-12 h-12 rounded-2xl ${option.bg} flex items-center justify-center ${option.color} ${option.glow} shadow-lg transition-transform group-hover:scale-110`}>
+                      <Icon size={24} />
                     </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white">{option.label}</h3>
-                      <p className="mt-1 text-xs leading-4 text-white/70">{option.description}</p>
+                    <span className="text-base font-bold text-white tracking-tight">{option.label}</span>
+                    <div className="ml-auto mr-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Plus size={16} className="text-gray-500" />
                     </div>
-                    <span className="mt-3 inline-flex items-center text-[11px] font-semibold text-white/80 group-hover:text-white">
-                      Crear ahora
-                    </span>
-                  </button>
+                  </motion.button>
                 );
               })}
+              
+              {/* Close Button at bottom of list */}
+              <motion.button
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                onClick={onClose}
+                className="mt-2 self-center w-12 h-12 rounded-full glass border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </motion.button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </>
       )}
     </AnimatePresence>
   );
