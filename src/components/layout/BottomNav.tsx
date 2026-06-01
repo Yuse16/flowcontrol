@@ -30,18 +30,18 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0F0F17]/95 backdrop-blur-xl border-t border-[#2A2A3C] safe-bottom">
-      <div className="flex items-end justify-around px-2 pt-2 pb-3">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] glass border-t border-white/5 safe-bottom rounded-t-[32px] shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
+      <div className="flex items-end justify-around px-2 pt-3 pb-3">
         {navItems.map((item) => {
           if (item.isAction) {
             return (
               <button
                 key="add"
                 onClick={() => openMenu()}
-                className="flex flex-col items-center -mt-5"
+                className="flex flex-col items-center -mt-6 active:scale-90 transition-transform"
               >
-                <div className="w-14 h-14 uzala-gradient rounded-full flex items-center justify-center shadow-uzala-lg">
-                  <Plus size={26} className="text-white" strokeWidth={2.5} />
+                <div className="w-16 h-16 uzala-gradient rounded-full flex items-center justify-center shadow-xl shadow-uzala-purple/40 border-4 border-[#05000A]">
+                  <Plus size={30} className="text-white" strokeWidth={3} />
                 </div>
               </button>
             );
@@ -52,65 +52,43 @@ export function BottomNav() {
               <button
                 key="more"
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="flex flex-col items-center gap-1 px-3 py-1"
+                className="flex flex-col items-center gap-1.5 px-3 py-1 active:scale-95 transition-all"
               >
                 <item.icon
-                  size={22}
+                  size={24}
                   className="text-gray-500"
                   strokeWidth={2}
                 />
-                <span className="text-[10px] font-semibold text-gray-500">{item.label}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">MÁS</span>
               </button>
             );
           }
 
           const isActive = pathname === item.href;
 
-          if (pathname === item.href) {
-            return (
-              <button
-                key={item.href!}
-                type="button"
-                onClick={() => handleActiveNavClick(item.href)}
-                className="flex flex-col items-center gap-1 px-3 py-1"
-              >
-                <item.icon
-                  size={22}
-                  className={clsx(
-                    'transition-colors',
-                    isActive ? 'text-uzala-purple' : 'text-gray-500'
-                  )}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-                <span
-                  className={clsx(
-                    'text-[10px] font-semibold transition-colors',
-                    isActive ? 'text-uzala-purple' : 'text-gray-500'
-                  )}
-                >
-                  {item.label}
-                </span>
-              </button>
-            );
-          }
-
           return (
             <Link
-              key={item.href!}
-              href={item.href!}
-              className="flex flex-col items-center gap-1 px-3 py-1"
+              key={item.href || item.label}
+              href={item.href || '#'}
+              onClick={(e) => {
+                if (isActive && item.href) {
+                  e.preventDefault();
+                  handleActiveNavClick(item.href);
+                }
+              }}
+              className="flex flex-col items-center gap-1.5 px-3 py-1 active:scale-95 transition-all"
             >
               <item.icon
-                size={22}
+                size={24}
                 className={clsx(
-                  'transition-colors',
-                  isActive ? 'text-uzala-purple' : 'text-gray-500'
+                  'transition-all duration-300',
+                  isActive ? 'text-uzala-purple drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]' : 'text-gray-500'
                 )}
                 strokeWidth={isActive ? 2.5 : 2}
               />
               <span
                 className={clsx(
-                  'text-[10px] font-semibold transition-colors',
+                  'text-[10px] font-black uppercase tracking-widest transition-all duration-300',
                   isActive ? 'text-uzala-purple' : 'text-gray-500'
                 )}
               >

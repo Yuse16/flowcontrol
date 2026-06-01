@@ -69,7 +69,7 @@ export default function ActivitiesPage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98 }}
-        className="flex items-center gap-3 bg-uzala-card border border-uzala-border rounded-2xl p-4"
+        className="flex items-center gap-3 glass-card p-4 hover:shadow-uzala/20"
       >
         <button
           type="button"
@@ -135,7 +135,7 @@ export default function ActivitiesPage() {
           placeholder="Buscar actividad..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-uzala-card border border-uzala-border rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-uzala-purple/30"
+          className="w-full glass border-white/5 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-uzala-purple/30"
         />
       </div>
 
@@ -155,7 +155,7 @@ export default function ActivitiesPage() {
                   {section.activities.map(renderActivityItem)}
                 </AnimatePresence>
               ) : (
-                <div className="rounded-3xl border border-uzala-border bg-uzala-card p-6 text-center text-sm text-gray-500">
+                <div className="rounded-3xl border border-uzala-border bg-white/5 p-6 text-center text-sm text-gray-500">
                   No hay actividades pendientes en esta sección.
                 </div>
               )}

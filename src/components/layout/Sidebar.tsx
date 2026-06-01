@@ -174,7 +174,7 @@ export function Sidebar() {
         initial={false}
         animate={isMobileMenuOpen ? { x: 0 } : undefined}
         className={clsx(
-          "h-full bg-[#0F0F17] border-r border-uzala-border flex-col relative z-50 transition-colors",
+          "h-full glass border-r border-uzala-border/50 flex-col relative z-50 transition-all duration-300",
           isMobileMenuOpen
             ? "flex fixed left-0 top-0 bottom-0 shadow-2xl w-[280px] safe-top md:hidden"
             : "hidden md:flex",

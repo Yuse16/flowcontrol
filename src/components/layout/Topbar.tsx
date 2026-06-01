@@ -14,10 +14,10 @@ export function Topbar() {
   const pendingCount = reminders.filter(r => r.status === 'pending').length;
 
   return (
-    <header className="h-14 bg-[#050508] border-b border-[#2A2A3C] flex items-center justify-between px-4 md:px-6 z-40 sticky top-0">
+    <header className="h-14 glass border-b border-uzala-border/50 flex items-center justify-between px-4 md:px-6 z-40 sticky top-0 transition-all duration-300">
       <button
         onClick={() => setIsMobileMenuOpen(true)}
-        className="p-2 text-gray-400 hover:text-white transition-colors rounded-xl"
+        className="p-2 text-gray-400 hover:text-white transition-colors rounded-xl hover:bg-white/5"
       >
         <Menu size={22} />
       </button>

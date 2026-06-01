@@ -57,7 +57,14 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
       </head>
-      <body className={`${inter.variable} ${orbitron.variable} ${inter.className} bg-background text-foreground flex min-h-screen min-h-[100svh] h-screen overflow-hidden transition-colors duration-300`}>
+      <body className={`${inter.variable} ${orbitron.variable} ${inter.className} bg-background text-foreground flex min-h-screen min-h-[100svh] h-screen overflow-hidden transition-colors duration-300 relative`}>
+        {/* Background Decorative Elements */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-uzala-purple/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute top-[20%] -right-[10%] w-[35%] h-[35%] bg-uzala-blue/10 rounded-full blur-[100px]" />
+          <div className="absolute -bottom-[10%] left-[20%] w-[30%] h-[30%] bg-uzala-teal/5 rounded-full blur-[80px]" />
+        </div>
+
         <ThemeProvider>
           <DesignProvider>
             <ReminderProvider>
@@ -70,7 +77,7 @@ export default function RootLayout({
                     <Sidebar />
                     <div className="flex-1 flex flex-col min-h-full overflow-hidden relative z-10 w-full safe-top">
                       <Topbar />
-                      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 md:p-6 lg:p-8 pb-24 md:pb-8 main-content-mobile relative transition-all duration-300">
+                      <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6 lg:p-8 pb-24 md:pb-8 main-content-mobile relative transition-all duration-300">
                         {children}
                       </main>
                       <BottomNav />

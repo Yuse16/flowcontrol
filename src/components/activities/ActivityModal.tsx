@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trash2, AlertTriangle } from 'lucide-react';
+import { X, Trash2, AlertTriangle, Calendar as CalendarIcon, AlignLeft } from 'lucide-react';
 import { Activity, ActivityOrigin } from '@/types/activity';
 import { PriorityLevel } from '@/types/common';
 
@@ -58,75 +58,84 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData, 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="w-full max-w-lg bg-white dark:bg-[#171717] border border-[#f3f4f6] dark:border-[#262626] rounded-2xl shadow-2xl overflow-hidden"
+            exit={{ opacity: 0, scale: 0.9, y: 40 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="w-full max-w-lg glass border-white/10 rounded-[32px] shadow-2xl overflow-hidden"
           >
-            <div className="flex items-center justify-between p-6 border-b border-[#f3f4f6] dark:border-[#262626]">
+            <div className="flex items-center justify-between p-6 border-b border-white/5">
               <div>
-                <h3 className="text-xl font-bold text-[#111827] dark:text-white">
+                <h3 className="text-xl font-black text-white tracking-tight">
                   {headerTitle ?? (initialData ? 'Editar Actividad' : 'Nueva Actividad')}
                 </h3>
-                <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider mt-0.5">
-                  Configura tu tarea o rutina
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-1">
+                  Gestión Inteligente
                 </p>
               </div>
-              <button onClick={onClose} className="p-2 text-gray-400 hover:text-[#111827] dark:hover:text-white transition-colors">
+              <button onClick={onClose} className="w-10 h-10 rounded-2xl flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
                 <X size={20} />
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
               {/* TITLE */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">Nombre de la actividad</label>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-uzala-purple ml-1">
+                  <CheckCircle2 size={12} /> Título
+                </label>
                 <input 
                   type="text" 
                   value={titulo}
                   onChange={e => setTitulo(e.target.value)}
-                  className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-3 text-sm text-[#111827] dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/10 focus:border-[#8B5CF6] transition-all"
+                  className="w-full glass bg-white/5 border-white/10 rounded-2xl px-5 py-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-uzala-purple/30 transition-all"
                   placeholder="Ej. Revisar inventario de surtido"
                   autoFocus
                 />
               </div>
 
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">Descripción</label>
+              {/* DESCRIPTION */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-uzala-purple ml-1">
+                  <AlignLeft size={12} /> Descripción
+                </label>
                 <textarea
                   value={descripcion}
                   onChange={e => setDescripcion(e.target.value)}
-                  className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-3 text-sm text-[#111827] dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/10 focus:border-[#8B5CF6] transition-all resize-none h-28"
-                  placeholder="Detalles adicionales"
+                  className="w-full glass bg-white/5 border-white/10 rounded-2xl px-5 py-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-uzala-purple/30 transition-all resize-none h-24"
+                  placeholder="Detalles adicionales opcionales..."
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">Fecha programada</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-uzala-purple ml-1">
+                    <CalendarIcon size={12} /> Fecha
+                  </label>
                   <input
                     type="date"
                     value={fechaProgramada}
                     onChange={e => setFechaProgramada(e.target.value)}
-                    className="w-full bg-[#f9fafb] dark:bg-[#0a0a0a] border border-[#f3f4f6] dark:border-[#262626] rounded-xl px-4 py-3 text-sm text-[#111827] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/10 focus:border-[#8B5CF6] transition-all"
+                    className="w-full glass bg-white/5 border-white/10 rounded-2xl px-5 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-uzala-purple/30 transition-all [color-scheme:dark]"
                   />
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-1.5">
+                
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-uzala-purple ml-1">
                     <AlertTriangle size={12} /> Prioridad
                   </label>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="flex gap-2">
                     {(['low', 'medium', 'high', 'urgent'] as PriorityLevel[]).map(p => (
                       <button
                         key={p}
                         type="button"
                         onClick={() => setPriority(p)}
-                        className={`py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg border transition-all ${
+                        className={`flex-1 py-3 text-[9px] font-black uppercase tracking-tighter rounded-xl border transition-all ${
                           priority === p 
-                          ? 'bg-[#8B5CF6] border-[#8B5CF6] text-white' 
-                          : 'bg-white dark:bg-[#171717] border-[#f3f4f6] dark:border-[#262626] text-gray-400 hover:border-gray-300'
+                          ? 'bg-uzala-purple border-uzala-purple text-white shadow-lg shadow-uzala-purple/20' 
+                          : 'glass bg-white/5 border-white/5 text-gray-500 hover:border-white/20'
                         }`}
                       >
                         {p === 'low' ? 'Baja' : p === 'medium' ? 'Media' : p === 'high' ? 'Alta' : 'Crítica'}
@@ -136,29 +145,30 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData, 
                 </div>
               </div>
 
-              <div className="pt-6 flex items-center justify-between border-t border-[#f3f4f6] dark:border-[#262626]">
+              <div className="pt-6 flex items-center justify-between border-t border-white/5">
                 {initialData && onDelete ? (
                   <button 
                     type="button" 
                     onClick={() => { onDelete(); onClose(); }} 
-                    className="p-2.5 text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors"
+                    className="w-12 h-12 flex items-center justify-center text-red-500 hover:bg-red-500/10 rounded-2xl transition-colors"
                     title="Eliminar actividad"
                   >
                     <Trash2 size={20} />
                   </button>
-                ) : <div></div>}
+                ) : <div />}
+                
                 <div className="flex gap-3">
                   <button 
                     type="button" 
                     onClick={onClose} 
-                    className="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+                    className="px-6 py-3 rounded-2xl text-sm font-bold text-gray-400 hover:text-white transition-all"
                   >
                     Cancelar
                   </button>
                   <button 
                     type="submit" 
                     disabled={!titulo.trim()} 
-                    className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-[#8B5CF6]/25 disabled:opacity-50 disabled:shadow-none"
+                    className="uzala-gradient text-white px-8 py-3 rounded-2xl text-sm font-black transition-all shadow-xl shadow-uzala-purple/20 disabled:opacity-30 disabled:shadow-none"
                   >
                     {submitLabel ?? (initialData ? 'Guardar Cambios' : 'Crear Actividad')}
                   </button>

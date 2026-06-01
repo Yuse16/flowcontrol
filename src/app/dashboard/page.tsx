@@ -82,7 +82,7 @@ export default function DashboardPage() {
     scheduled: { title: `${stats.scheduled} de hoy`, subtitle: 'en agenda' },
     completed: { title: `${stats.completed} hechas`, subtitle: `${safeProgress}% completado` },
     pending: { title: `${stats.pending} totales`, subtitle: 'pendientes' },
-    restock: { title: `${stats.restock} urgentes`, subtitle: 'por surtir' },
+    restock: { title: `${stats.restock} totales`, subtitle: 'por surtir' },
   };
 
   return (
@@ -124,7 +124,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.08 }}
-              className={`bg-gradient-to-br ${card.color} border ${card.border} rounded-3xl p-4`}
+              className={`bg-gradient-to-br ${card.color} glass-card border-none p-4`}
             >
               <div className={`w-11 h-11 rounded-2xl bg-[#0F0F17]/40 flex items-center justify-center mb-4 ${card.iconColor}`}>
                 <Icon size={18} />
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.06 }}
-                className="flex items-center gap-3 bg-uzala-card border border-uzala-border rounded-2xl p-4"
+                className="flex items-center gap-3 glass-card p-4 hover:shadow-uzala/10 border-none"
               >
                 <span className={`h-2.5 w-2.5 rounded-full ${
                   activity.priority === 'urgent'
@@ -180,7 +180,7 @@ export default function DashboardPage() {
               </motion.div>
             ))
           ) : (
-            <div className="text-center py-10 bg-uzala-card border border-uzala-border rounded-2xl">
+            <div className="text-center py-10 glass-card border-none">
               <p className="text-sm text-gray-500">No hay tareas pendientes importantes</p>
               <Link href="/activities" className="text-xs text-uzala-purple font-semibold mt-2 inline-block">
                 Agregar actividad
