@@ -53,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning className="dark">
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
@@ -78,8 +78,10 @@ export default function RootLayout({
                     <Sidebar />
                     <div className="flex-1 flex flex-col min-h-full overflow-hidden relative z-10 w-full safe-top">
                       <Topbar />
-                      <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6 lg:p-8 pb-24 md:pb-8 main-content-mobile relative transition-all duration-300">
-                        {children}
+                      <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6 lg:p-8 pb-24 md:pb-8 main-content-mobile relative transition-all duration-300 flex flex-col items-center">
+                        <div className="w-full max-w-7xl mx-auto">
+                          {children}
+                        </div>
                       </main>
                       <BottomNav />
                     </div>

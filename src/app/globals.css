@@ -4,12 +4,12 @@
 
 @layer base {
   :root {
-    /* Base Colors */
-    --background: #f8fafc;
-    --foreground: #0f172a;
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --border-color: rgba(226, 232, 240, 0.8);
-    
+    /* Default is DARK for professional startup */
+    --background: #05000A;
+    --foreground: #f1f5f9;
+    --card-bg: rgba(26, 26, 40, 0.8);
+    --border-color: rgba(42, 42, 60, 0.8);
+
     /* Uzala Palette */
     --primary: #8B5CF6;
     --primary-dark: #7C3AED;
@@ -18,32 +18,31 @@
     --uzala-teal: #14B8A6;
     --uzala-orange: #F97316;
     --uzala-cyan: #06B6D4;
-    
+
     /* UI tokens */
     --radius: 20px;
     --font-size: 16px;
     --font-weight: 500;
     --line-height: 1.5;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-    
-    /* Glass tokens */
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --glass-blur: 12px;
-  }
-
-  .dark {
-    --background: #05000A;
-    --foreground: #f1f5f9;
-    --card-bg: rgba(26, 26, 40, 0.8);
-    --border-color: rgba(42, 42, 60, 0.8);
-    
     --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    
+
     /* Glass tokens Dark */
     --glass-bg: rgba(15, 15, 23, 0.7);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-blur: 20px;
+  }
+
+  .light {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --border-color: rgba(226, 232, 240, 0.8);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+    /* Glass tokens Light */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-blur: 12px;
   }
 
   html, body {
@@ -51,6 +50,7 @@
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: var(--background);
   }
 
   body {
@@ -63,7 +63,6 @@
     transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s ease;
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
-    touch-action: manipulation;
   }
 }
 
