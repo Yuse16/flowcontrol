@@ -24,9 +24,7 @@ export function BottomNav() {
     if (!href) return;
     if (href === '/calendar' && typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('calendar-nav-click'));
-      return;
     }
-    router.push(href);
   };
 
   return (
