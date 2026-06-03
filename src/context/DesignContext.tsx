@@ -5,6 +5,7 @@ interface ElementStyle {
   color?: string;
   backgroundColor?: string;
   fontSize?: string;
+  fontFamily?: string;
   fontWeight?: string;
   borderRadius?: string;
   opacity?: string;

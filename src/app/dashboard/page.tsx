@@ -1,4 +1,5 @@
 "use client";
+import { useState } from 'react';
 import { useTodos } from '@/hooks/useTodos';
 import { useCalendarTasks } from '@/hooks/useCalendarTasks';
 import { useAdvancedActivities } from '@/hooks/useAdvancedActivities';
@@ -8,20 +9,25 @@ import { Calendar, CheckCircle2, ClipboardList, Package } from 'lucide-react';
 import { formatDateString } from '@/utils/date';
 import { getGreeting } from '@/utils/uzalaTheme';
 import Link from 'next/link';
+import { DashboardSummaryModal } from '@/components/dashboard/DashboardSummaryModal';
 
 const summaryCards = [
-  { key: 'scheduled', icon: Calendar, color: 'from-uzala-purple/20 to-uzala-purple/5', iconColor: 'text-uzala-purple', border: 'border-uzala-purple/20' },
-  { key: 'completed', icon: CheckCircle2, color: 'from-green-500/20 to-green-500/5', iconColor: 'text-green-400', border: 'border-green-500/20' },
-  { key: 'pending', icon: ClipboardList, color: 'from-teal-500/20 to-teal-500/5', iconColor: 'text-teal-400', border: 'border-teal-500/20' },
-  { key: 'restock', icon: Package, color: 'from-orange-500/20 to-orange-500/5', iconColor: 'text-orange-400', border: 'border-orange-500/20' },
-];
+  { key: 'scheduled', icon: Calendar, color: 'from-uzala-purple/20 to-uzala-purple/5', iconColor: 'text-uzala-purple', border: 'border-uzala-purple/20', title: 'Hoy' },
+  { key: 'completed', icon: CheckCircle2, color: 'from-green-500/20 to-green-500/5', iconColor: 'text-green-400', border: 'border-green-500/20', title: 'Hechas' },
+  { key: 'pending', icon: ClipboardList, color: 'from-teal-500/20 to-teal-500/5', iconColor: 'text-teal-400', border: 'border-teal-500/20', title: 'Pendientes' },
+  { key: 'restock', icon: Package, color: 'from-orange-500/20 to-orange-500/5', iconColor: 'text-orange-400', border: 'border-orange-500/20', title: 'Por Surtir' },
+] as const;
+
+type SummaryCategory = typeof summaryCards[number]['key'];
 
 export default function DashboardPage() {
   const { tasks: todos, isLoaded: todosLoaded } = useTodos();
   const { isLoaded: calLoaded } = useCalendarTasks();
-  const { activities, isLoaded: activitiesLoaded } = useAdvancedActivities();
+  const { activities, isLoaded: activitiesLoaded, updateActivity, deleteActivity, toggleCompletion } = useAdvancedActivities();
   const { currentUser } = useAuth();
   const todayStr = formatDateString(new Date());
+
+  const [selectedCategory, setSelectedCategory] = useState<SummaryCategory | null>(null);
 
   if (!todosLoaded || !calLoaded || !activitiesLoaded) {
     return (
@@ -31,23 +37,18 @@ export default function DashboardPage() {
     );
   }
 
-  // Filtrado de actividades de hoy (Programadas para hoy + Pendientes sin fecha)
+  // Filtrado de actividades
   const todayActivities = activities.filter((activity) => 
     activity.fechaProgramada === todayStr || (!activity.fechaProgramada && activity.estado !== 'completado')
   );
   
-  const completedToday = activities.filter((activity) => 
+  const completedActivities = activities.filter((activity) => 
     activity.estado === 'completado' && 
     (activity.fechaCompletado?.startsWith(todayStr) || activity.fechaProgramada === todayStr)
-  ).length;
+  );
 
-  const pendingToday = todayActivities.filter(a => a.estado !== 'completado').length;
+  const pendingActivities = activities.filter(a => a.estado !== 'completado');
   
-  // Pendientes globales (excluyendo completados de cualquier origen)
-  const pendingTodos = todos.filter((task) => task.status !== 'completed').length;
-  const pendingActivitiesGlobal = activities.filter(a => a.estado !== 'completado').length;
-  
-  // Lógica de "Por surtir" (prioridad urgente o palabras clave)
   const restockItems = activities.filter(a => 
     a.estado !== 'completado' && 
     (a.priority === 'urgent' || 
@@ -56,7 +57,7 @@ export default function DashboardPage() {
      a.titulo.toLowerCase().includes('falta'))
   );
   
-  const progress = todayActivities.length > 0 ? Math.round((completedToday / (todayActivities.length + (completedToday > todayActivities.length ? 0 : 0))) * 100) : 0;
+  const progress = todayActivities.length > 0 ? Math.round((completedActivities.length / (todayActivities.length + (completedActivities.length > todayActivities.length ? 0 : 0))) * 100) : 0;
   const safeProgress = Math.min(100, progress);
 
   // Actividades próximas (Futuras + Pendientes críticas)
@@ -73,8 +74,8 @@ export default function DashboardPage() {
 
   const stats = {
     scheduled: todayActivities.length,
-    completed: completedToday,
-    pending: pendingActivitiesGlobal + pendingTodos,
+    completed: completedActivities.length,
+    pending: pendingActivities.length, // Usamos solo activities para consistencia en el modal
     restock: restockItems.length,
   };
 
@@ -83,6 +84,16 @@ export default function DashboardPage() {
     completed: { title: `${stats.completed} hechas`, subtitle: `${safeProgress}% completado` },
     pending: { title: `${stats.pending} totales`, subtitle: 'pendientes' },
     restock: { title: `${stats.restock} totales`, subtitle: 'por surtir' },
+  };
+
+  const getFilteredActivities = (cat: SummaryCategory) => {
+    switch(cat) {
+      case 'scheduled': return todayActivities;
+      case 'completed': return completedActivities;
+      case 'pending': return pendingActivities;
+      case 'restock': return restockItems;
+      default: return [];
+    }
   };
 
   return (
@@ -98,8 +109,8 @@ export default function DashboardPage() {
               {getGreeting()}, {currentUser.name.split(' ')[0]} 👋
             </h1>
             <p className="text-sm text-gray-400 mt-1">
-              {pendingToday > 0 
-                ? `Tienes ${pendingToday} tareas para resolver hoy` 
+              {stats.scheduled > 0 
+                ? `Tienes ${stats.scheduled} tareas para resolver hoy` 
                 : todayActivities.length > 0
                   ? '¡Día completado! No te queda nada pendiente ✨'
                   : 'Tu agenda está libre para hoy'}
@@ -124,7 +135,8 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.08 }}
-              className={`bg-gradient-to-br ${card.color} glass-card border-none p-4`}
+              onClick={() => setSelectedCategory(card.key)}
+              className={`bg-gradient-to-br ${card.color} glass-card border-none p-4 cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all`}
             >
               <div className={`w-11 h-11 rounded-2xl bg-[#0F0F17]/40 flex items-center justify-center mb-4 ${card.iconColor}`}>
                 <Icon size={18} />
@@ -189,6 +201,20 @@ export default function DashboardPage() {
           )}
         </div>
       </section>
+
+      {/* Modal de Resumen */}
+      {selectedCategory && (
+        <DashboardSummaryModal
+          isOpen={!!selectedCategory}
+          onClose={() => setSelectedCategory(null)}
+          category={selectedCategory}
+          title={summaryCards.find(c => c.key === selectedCategory)?.title || 'Resumen'}
+          activities={getFilteredActivities(selectedCategory)}
+          onUpdateActivity={updateActivity}
+          onDeleteActivity={deleteActivity}
+          onToggleCompletion={toggleCompletion}
+        />
+      )}
     </div>
   );
 }
