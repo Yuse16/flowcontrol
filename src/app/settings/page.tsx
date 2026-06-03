@@ -2,14 +2,37 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeProvider';
-import { User, Shield, Palette, Zap, Save, CheckCircle } from 'lucide-react';
+import { useDesign } from '@/context/DesignContext';
+import { User, Shield, Palette, Zap, Save, CheckCircle, Type, Maximize, Paintbrush } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const FONT_OPTIONS = [
+  'Inter', 'Roboto', 'Open Sans', 'Montserrat', 'Poppins', 'Lato', 'Raleway', 'Ubuntu', 
+  'Nunito', 'Oswald', 'Playfair Display', 'Merriweather', 'Lora', 'Georgia', 
+  'Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Tahoma', 
+  'Trebuchet MS', 'Impact', 'Comic Sans MS'
+];
+
+const COLOR_OPTIONS = [
+  '#FFFFFF', '#FCA5A5', '#EF4444', '#B91C1C', '#FDBA74', '#F97316', '#C2410C', 
+  '#FDE047', '#EAB308', '#A16207', '#BEF264', '#84CC16', '#4D7C0F', '#86EFAC', 
+  '#22C55E', '#15803D', '#67E8F9', '#06B6D4', '#0E7490', '#93C5FD', '#3B82F6', 
+  '#1D4ED8', '#C4B5FD', '#8B5CF6', '#6D28D9', '#F9A8D4', '#EC4899', '#BE185D'
+];
+
+const SIZE_OPTIONS = [
+  '12px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '36px', '40px', 
+  '44px', '48px', '52px', '56px', '60px', '64px', '72px', '80px', '96px', '112px', '128px'
+];
 
 export default function SettingsPage() {
   const { currentUser, updateProfile } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { updateElementStyle, settings } = useDesign();
   const [name, setName] = useState(currentUser.name);
   const [showSaved, setShowSaved] = useState(false);
+
+  const greetingStyle = settings.overrides['dashboard-greeting'] || {};
 
   useEffect(() => {
     setName(currentUser.name);
@@ -109,13 +132,93 @@ export default function SettingsPage() {
             </form>
           </section>
 
+          {/* Greeting Customization Section */}
+          <section className="glass-card rounded-3xl p-8 border border-white/5">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-primary/20 rounded-xl text-primary">
+                <Paintbrush size={20} />
+              </div>
+              <h2 className="text-xl font-bold text-white">Personalizar Saludo (Dashboard)</h2>
+            </div>
+
+            <div className="space-y-8">
+              {/* Font Select */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">
+                  <Type size={14} />
+                  <span>Tipo de Letra</span>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {FONT_OPTIONS.map((font) => (
+                    <button
+                      key={font}
+                      onClick={() => updateElementStyle('dashboard-greeting', { fontFamily: font })}
+                      className={`px-3 py-2 rounded-xl text-xs font-medium transition-all border ${
+                        greetingStyle.fontFamily === font
+                          ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
+                          : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
+                      }`}
+                      style={{ fontFamily: font }}
+                    >
+                      {font}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Select */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">
+                  <Palette size={14} />
+                  <span>Color del Texto</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {COLOR_OPTIONS.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => updateElementStyle('dashboard-greeting', { color: color })}
+                      className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-110 active:scale-95 ${
+                        greetingStyle.color === color ? 'border-white scale-110' : 'border-transparent'
+                      }`}
+                      style={{ backgroundColor: color }}
+                      title={color}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Size Select */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">
+                  <Maximize size={14} />
+                  <span>Tamaño de Letra</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {SIZE_OPTIONS.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => updateElementStyle('dashboard-greeting', { fontSize: size })}
+                      className={`px-3 py-2 rounded-xl text-xs font-medium transition-all border ${
+                        greetingStyle.fontSize === size
+                          ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
+                          : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* Theme Section */}
           <section className="glass-card rounded-3xl p-8 border border-white/5">
             <div className="flex items-center gap-3 mb-8">
               <div className="p-2.5 bg-purple-500/20 rounded-xl text-purple-400">
                 <Palette size={20} />
               </div>
-              <h2 className="text-xl font-bold text-white">Personalización</h2>
+              <h2 className="text-xl font-bold text-white">Tema de Interfaz</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

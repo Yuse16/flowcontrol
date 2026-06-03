@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User } from '@/types/user';
+import { PriorityLevel } from '@/types/common';
 import { X, UserPlus } from 'lucide-react';
+import { PrioritySelector } from '@/components/common/PrioritySelector';
 
 interface TaskAssignmentModalProps {
   isOpen: boolean;
@@ -13,7 +15,7 @@ interface TaskAssignmentModalProps {
 
 export function TaskAssignmentModal({ isOpen, onClose, users, preSelectedUserId, onAssign }: TaskAssignmentModalProps) {
   const [title, setTitle] = useState('');
-  const [priority, setPriority] = useState('medium');
+  const [priority, setPriority] = useState<PriorityLevel>('medium');
   const [assigneeId, setAssigneeId] = useState('');
 
   // Update state when modal opens with a preselected user
@@ -82,19 +84,7 @@ export function TaskAssignmentModal({ isOpen, onClose, users, preSelectedUserId,
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Prioridad</label>
-                <select 
-                  value={priority}
-                  onChange={e => setPriority(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
-                >
-                  <option value="low">Baja</option>
-                  <option value="medium">Media</option>
-                  <option value="high">Alta</option>
-                  <option value="urgent">Urgente</option>
-                </select>
-              </div>
+              <PrioritySelector value={priority} onChange={setPriority} label="Prioridad de Asignación" />
 
               <div className="pt-4 flex gap-3 justify-end">
                 <button type="button" onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-white/5 transition-colors">

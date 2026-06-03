@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trash2, AlertTriangle, Calendar as CalendarIcon, AlignLeft } from 'lucide-react';
+import { X, Trash2, Calendar as CalendarIcon, AlignLeft, CheckCircle2 } from 'lucide-react';
 import { Activity, ActivityOrigin } from '@/types/activity';
 import { PriorityLevel } from '@/types/common';
+import { PrioritySelector } from '@/components/common/PrioritySelector';
 
 interface ActivityModalProps {
   isOpen: boolean;
@@ -37,8 +38,6 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData, 
     }
   }, [initialData, isOpen, defaultFechaProgramada]);
 
-  if (!isOpen) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!titulo.trim()) return;
@@ -58,7 +57,12 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData, 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md"
+        >
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -122,27 +126,10 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData, 
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-uzala-purple ml-1">
-                    <AlertTriangle size={12} /> Prioridad
-                  </label>
-                  <div className="flex gap-2">
-                    {(['low', 'medium', 'high', 'urgent'] as PriorityLevel[]).map(p => (
-                      <button
-                        key={p}
-                        type="button"
-                        onClick={() => setPriority(p)}
-                        className={`flex-1 py-3 text-[9px] font-black uppercase tracking-tighter rounded-xl border transition-all ${
-                          priority === p 
-                          ? 'bg-uzala-purple border-uzala-purple text-white shadow-lg shadow-uzala-purple/20' 
-                          : 'glass bg-white/5 border-white/5 text-gray-500 hover:border-white/20'
-                        }`}
-                      >
-                        {p === 'low' ? 'Baja' : p === 'medium' ? 'Media' : p === 'high' ? 'Alta' : 'Crítica'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <PrioritySelector 
+                  value={priority} 
+                  onChange={setPriority} 
+                />
               </div>
 
               <div className="pt-6 flex items-center justify-between border-t border-white/5">
@@ -176,7 +163,7 @@ export function ActivityModal({ isOpen, onClose, onSave, onDelete, initialData, 
               </div>
             </form>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

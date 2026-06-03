@@ -4,6 +4,7 @@ import { Activity } from '@/types/activity';
 import { PriorityLevel } from '@/types/common';
 import { formatDateString } from '@/utils/date';
 import { X, Trash2 } from 'lucide-react';
+import { PrioritySelector } from '@/components/common/PrioritySelector';
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -59,13 +60,6 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
     onSave(title.trim(), priority, description);
     onClose();
   };
-
-  const priorityOptions: { value: PriorityLevel, label: string, color: string }[] = [
-    { value: 'low', label: 'Baja', color: 'bg-green-500/20 text-green-400 border-green-500/30' },
-    { value: 'medium', label: 'Media', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-    { value: 'high', label: 'Alta', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-    { value: 'urgent', label: 'Urgente', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
-  ];
 
   return (
     <AnimatePresence>
@@ -169,21 +163,7 @@ export function TaskModal({ isOpen, onClose, onSave, onDelete, onMove, onToggleS
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-500 mb-2">Prioridad</label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {priorityOptions.map(p => (
-                    <button
-                      key={p.value}
-                      type="button"
-                      onClick={() => setPriority(p.value)}
-                      className={`py-2 px-1 text-xs font-semibold rounded-lg border transition-all ${priority === p.value ? p.color + ' ring-1 ring-current' : 'border-border text-gray-500 hover:bg-white/5'}`}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <PrioritySelector value={priority} onChange={setPriority} label="Prioridad de Tarea" />
 
               <div className="pt-4 flex items-center justify-between">
                 {initialData && onDelete ? (

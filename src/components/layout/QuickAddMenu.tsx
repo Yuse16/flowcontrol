@@ -63,18 +63,18 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-[110] flex items-center justify-center">
+          {/* Backdrop - now fills the screen but within the same wrapper */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[110] bg-black/40 backdrop-blur-md"
+            className="absolute inset-0 bg-black/40 backdrop-blur-md"
           />
 
           {/* Menu Container */}
-          <div className="fixed inset-x-0 bottom-24 z-[120] flex flex-col items-center justify-end px-6 pointer-events-none">
+          <div className="relative w-full h-full flex flex-col items-center justify-end px-6 pb-24 pointer-events-none">
             <div className="w-full max-w-xs flex flex-col gap-3 pointer-events-auto">
               {options.map((option, idx) => {
                 const Icon = option.icon;
@@ -86,13 +86,18 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
                       opacity: 1, 
                       y: 0, 
                       scale: 1,
-                      transition: { delay: (options.length - 1 - idx) * 0.05, type: 'spring', damping: 20 }
+                      transition: { 
+                        delay: (options.length - 1 - idx) * 0.04, 
+                        type: 'spring', 
+                        damping: 20, 
+                        stiffness: 300 
+                      }
                     }}
                     exit={{ 
                       opacity: 0, 
                       y: 10, 
-                      scale: 0.9,
-                      transition: { delay: idx * 0.03 }
+                      scale: 0.95,
+                      transition: { delay: idx * 0.02, duration: 0.15 }
                     }}
                     onClick={() => onSelect(option.key)}
                     className="flex items-center gap-4 p-2 pl-3 rounded-[24px] glass-card border-white/10 shadow-xl group active:scale-95 transition-all"
@@ -108,11 +113,12 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
                 );
               })}
               
-              {/* Close Button at bottom of list */}
+              {/* Close Button */}
               <motion.button
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.2 }}
                 onClick={onClose}
                 className="mt-2 self-center w-12 h-12 rounded-full glass border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
               >
@@ -120,7 +126,7 @@ export function QuickAddMenu({ isOpen, onClose, onSelect }: QuickAddMenuProps) {
               </motion.button>
             </div>
           </div>
-        </>
+        </div>
       )}
     </AnimatePresence>
   );

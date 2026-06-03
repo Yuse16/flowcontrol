@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { TodoTask, TodoStatus } from '@/types/todo';
 import { PriorityLevel } from '@/types/common';
 import { X, Trash2, Calendar, Flag, AlignLeft } from 'lucide-react';
+import { PrioritySelector } from '@/components/common/PrioritySelector';
 
 interface TodoDetailPanelProps {
   task: TodoTask | null;
@@ -51,22 +52,11 @@ export function TodoDetailPanel({ task, isOpen, onClose, onUpdate, onDelete }: T
                 />
               </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="w-24 flex items-center gap-2 text-gray-400">
-                    <Flag size={16} /> Prioridad
-                  </div>
-                  <select 
-                    value={task.priority}
-                    onChange={(e) => onUpdate(task.id, { priority: e.target.value as PriorityLevel })}
-                    className="bg-black/50 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-primary"
-                  >
-                    <option value="low">Baja</option>
-                    <option value="medium">Media</option>
-                    <option value="high">Alta</option>
-                    <option value="urgent">Urgente</option>
-                  </select>
-                </div>
+              <div className="space-y-6">
+                <PrioritySelector 
+                  value={task.priority} 
+                  onChange={(val) => onUpdate(task.id, { priority: val })} 
+                />
 
                 <div className="flex items-center gap-4 text-sm">
                   <div className="w-24 flex items-center gap-2 text-gray-400">
@@ -75,7 +65,7 @@ export function TodoDetailPanel({ task, isOpen, onClose, onUpdate, onDelete }: T
                   <select 
                     value={task.status}
                     onChange={(e) => onUpdate(task.id, { status: e.target.value as TodoStatus })}
-                    className="bg-black/50 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-primary"
+                    className="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-primary"
                   >
                     <option value="pending">Pendiente</option>
                     <option value="in_progress">En Progreso</option>
@@ -92,7 +82,7 @@ export function TodoDetailPanel({ task, isOpen, onClose, onUpdate, onDelete }: T
                     type="date"
                     value={task.dueDate || ''}
                     onChange={(e) => onUpdate(task.id, { dueDate: e.target.value })}
-                    className="bg-black/50 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-primary"
+                    className="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
